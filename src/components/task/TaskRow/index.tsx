@@ -33,6 +33,8 @@ const TaskRow: React.FC<TaskRowProps> = ({
   onTimelineExtend,
   renderTask,
   renderTooltip,
+  renderTooltipInPortal = true,
+  tooltipOffset = 12,
   getTaskColor,
 }) => {
   if (!taskGroup || !taskGroup.id || !Array.isArray(taskGroup.tasks)) {
@@ -498,13 +500,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
   };
 
   const updateTooltipPosition = (e: React.MouseEvent | MouseEvent) => {
-    if (rowRef.current) {
-      const rect = rowRef.current.getBoundingClientRect();
-      setTooltipPosition({
-        x: e.clientX - rect.left + 20,
-        y: e.clientY - rect.top,
-      });
-    }
+    setTooltipPosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
   };
 
   const handleMouseDown = (
@@ -579,11 +578,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
     lastMousePositionRef.current = { x: e.clientX, y: e.clientY };
 
     // Update tooltip position
-    if (e instanceof MouseEvent && hoveredTask && rowRef.current) {
-      const rect = rowRef.current.getBoundingClientRect();
+    if (e instanceof MouseEvent && hoveredTask) {
       setTooltipPosition({
-        x: e.clientX - rect.left + 20,
-        y: e.clientY - rect.top,
+        x: e.clientX,
+        y: e.clientY,
       });
     } else if (!(e instanceof MouseEvent)) {
       updateTooltipPosition(e as React.MouseEvent);
@@ -957,6 +955,8 @@ const TaskRow: React.FC<TaskRowProps> = ({
           className={tooltipClassName}
           viewMode={viewMode}
           renderTooltip={renderTooltip}
+          renderTooltipInPortal={renderTooltipInPortal}
+          tooltipOffset={tooltipOffset}
         />
       )}
     </div>

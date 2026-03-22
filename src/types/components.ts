@@ -113,6 +113,8 @@ export interface GanttChartProps {
   renderTaskList?: (props: TaskListRenderProps) => React.ReactNode;
   renderTask?: (props: TaskRenderProps) => React.ReactNode;
   renderTooltip?: (props: TooltipRenderProps) => React.ReactNode;
+  renderTooltipInPortal?: boolean;
+  tooltipOffset?: number;
   renderViewModeSelector?: (
     props: ViewModeSelectorRenderProps,
   ) => React.ReactNode;
@@ -169,6 +171,8 @@ export interface TaskRowProps {
   // Custom render functions
   renderTask?: (props: TaskRenderProps) => React.ReactNode;
   renderTooltip?: (props: TooltipRenderProps) => React.ReactNode;
+  renderTooltipInPortal?: boolean;
+  tooltipOffset?: number;
   getTaskColor?: (props: TaskColorProps) => {
     backgroundColor: string;
     borderColor?: string;
@@ -244,6 +248,8 @@ export interface TooltipProps {
   className?: string;
   viewMode?: ViewMode;
   renderTooltip?: (props: TooltipRenderProps) => React.ReactNode;
+  renderTooltipInPortal?: boolean;
+  tooltipOffset?: number;
 }
 
 export interface TodayMarkerProps {

@@ -70,6 +70,8 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
       renderTaskList,
       renderTask,
       renderTooltip,
+      renderTooltipInPortal = true,
+      tooltipOffset = 12,
       renderViewModeSelector,
       renderHeader,
       renderTimelineHeader,
@@ -1176,6 +1178,8 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
                       onTimelineExtend={handleTimelineExtension}
                       renderTask={renderTask}
                       renderTooltip={renderTooltip}
+                      renderTooltipInPortal={renderTooltipInPortal}
+                      tooltipOffset={tooltipOffset}
                       getTaskColor={getTaskColor}
                     />
                   );

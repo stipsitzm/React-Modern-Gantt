@@ -574,14 +574,16 @@ function App() {
 
 ### Props
 
-| Prop                    | Type              | Default              | Description                                                                          |
-| ----------------------- | ----------------- | -------------------- | ------------------------------------------------------------------------------------ |
-| `focusMode`             | `boolean`         | `true`               | Auto-scroll to current time when switching view modes                                |
-| `showCurrentDateMarker` | `boolean`         | `true`               | Show/hide the current time indicator line                                            |
-| `todayLabel`            | `string`          | `"Today"`            | Label for the current time marker; overrides `localeText.today`                      |
-| `headerLabel`           | `string`          | `"Resources"`        | Left column header; overrides `localeText.resources`                                 |
-| `title`                 | `string`          | `"Project Timeline"` | Header title; overrides `localeText.title`                                           |
-| `localeText`            | `GanttLocaleText` | `{}`                 | Optional UI translations/overrides for title, resources, today, and view mode labels |
+| Prop                    | Type              | Default              | Description                                                                            |
+| ----------------------- | ----------------- | -------------------- | -------------------------------------------------------------------------------------- |
+| `focusMode`             | `boolean`         | `true`               | Auto-scroll to current time when switching view modes                                  |
+| `showCurrentDateMarker` | `boolean`         | `true`               | Show/hide the current time indicator line                                              |
+| `todayLabel`            | `string`          | `"Today"`            | Label for the current time marker; overrides `localeText.today`                        |
+| `headerLabel`           | `string`          | `"Resources"`        | Left column header; overrides `localeText.resources`                                   |
+| `title`                 | `string`          | `"Project Timeline"` | Header title; overrides `localeText.title`                                             |
+| `localeText`            | `GanttLocaleText` | `{}`                 | Optional UI translations/overrides for title, resources, today, and view mode labels   |
+| `renderTooltipInPortal` | `boolean`         | `true`               | Render task tooltips into `document.body` to avoid clipping inside overflow containers |
+| `tooltipOffset`         | `number`          | `12`                 | Space in pixels between the hovered task and the tooltip                               |
 
 ### Programmatic Scrolling
 
@@ -1166,6 +1168,8 @@ You can also localize built-in UI labels (or replace them for your own domain, e
 ```
 
 If you want to override only the title or resource label for a specific screen, you can still pass `title`, `headerLabel`, or `todayLabel` directly; those explicit props take precedence over `localeText`.
+
+Task tooltips are also portaled to `document.body` by default so they are not clipped by scrollable gantt wrappers. If you need the previous inline behavior for a special case, set `renderTooltipInPortal={false}` or adjust the gap with `tooltipOffset`.
 
 ### How do I handle updates to tasks?
 
