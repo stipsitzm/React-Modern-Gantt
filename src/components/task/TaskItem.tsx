@@ -37,12 +37,10 @@ const TaskItem: React.FC<TaskItemProps> = ({
   const taskRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const [isDraggingProgress, setIsDraggingProgress] = useState(false);
-  const [progressPercent, setProgressPercent] = useState(task.percent || 0);
+  const [progressPercent, setProgressPercent] = useState(task?.percent || 0);
   const [showProgressTooltip, setShowProgressTooltip] = useState(false);
 
-  if (!task || !task.id) {
-    return null;
-  }
+  const isValidTask = Boolean(task && task.id);
 
   // Get task colors - either from custom function or default
   let backgroundColor = task.color || "var(--rmg-task-color)";
@@ -150,8 +148,12 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
   // Update progress state when task changes
   useEffect(() => {
-    setProgressPercent(task.percent || 0);
-  }, [task.percent]);
+    setProgressPercent(task?.percent || 0);
+  }, [task?.percent]);
+
+  if (!isValidTask) {
+    return null;
+  }
 
   // Use custom render function if provided
   if (renderTask) {
