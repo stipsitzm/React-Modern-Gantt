@@ -1,11 +1,12 @@
 import React from "react";
-import { ViewMode } from "@/types";
+import { GanttLabels, ViewMode } from "@/types";
 
 interface ViewModeSelectorProps {
   activeMode: ViewMode;
   onChange: (mode: ViewMode) => void;
   darkMode: boolean;
   availableModes?: ViewMode[];
+  labels?: Partial<GanttLabels>;
 }
 
 /**
@@ -16,16 +17,21 @@ const ViewModeSelector: React.FC<ViewModeSelectorProps> = ({
   onChange,
   darkMode,
   availableModes,
+  labels,
 }) => {
   // All possible view modes
-  const allViewModes = [
-    { id: ViewMode.MINUTE, label: "Minute" },
-    { id: ViewMode.HOUR, label: "Hour" },
-    { id: ViewMode.DAY, label: "Day" },
-    { id: ViewMode.WEEK, label: "Week" },
-    { id: ViewMode.MONTH, label: "Month" },
-    { id: ViewMode.QUARTER, label: "Quarter" },
-    { id: ViewMode.YEAR, label: "Year" },
+  const allViewModes: Array<{
+    id: ViewMode;
+    labelKey: keyof GanttLabels;
+    fallback: string;
+  }> = [
+    { id: ViewMode.MINUTE, labelKey: "minute", fallback: "Minute" },
+    { id: ViewMode.HOUR, labelKey: "hour", fallback: "Hour" },
+    { id: ViewMode.DAY, labelKey: "day", fallback: "Day" },
+    { id: ViewMode.WEEK, labelKey: "week", fallback: "Week" },
+    { id: ViewMode.MONTH, labelKey: "month", fallback: "Month" },
+    { id: ViewMode.QUARTER, labelKey: "quarter", fallback: "Quarter" },
+    { id: ViewMode.YEAR, labelKey: "year", fallback: "Year" },
   ];
 
   // Default standard view modes (excluding MINUTE and HOUR)
@@ -58,7 +64,7 @@ const ViewModeSelector: React.FC<ViewModeSelectorProps> = ({
           data-view-mode={mode.id}
           data-active={activeMode === mode.id ? "true" : "false"}
         >
-          {mode.label}
+          {labels?.[mode.labelKey] || mode.fallback}
         </button>
       ))}
     </div>

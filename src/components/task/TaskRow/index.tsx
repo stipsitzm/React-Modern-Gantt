@@ -33,15 +33,15 @@ const TaskRow: React.FC<TaskRowProps> = ({
   onTimelineExtend,
   renderTask,
   renderTooltip,
+  renderTooltipInPortal = true,
+  tooltipOffset = 12,
   getTaskColor,
 }) => {
-  if (!taskGroup || !taskGroup.id || !Array.isArray(taskGroup.tasks)) {
-    return (
-      <div className="rmg-task-row rmg-task-row-invalid">
-        Invalid task group data
-      </div>
-    );
-  }
+  const hasValidTaskGroup = Boolean(
+    taskGroup && taskGroup.id && Array.isArray(taskGroup.tasks),
+  );
+  const taskGroupId = taskGroup?.id || "invalid-task-group";
+  const groupTasks = Array.isArray(taskGroup?.tasks) ? taskGroup.tasks : [];
 
   // Ensure valid dates
   const validStartDate = startDate instanceof Date ? startDate : new Date();
@@ -125,12 +125,8 @@ const TaskRow: React.FC<TaskRowProps> = ({
 
   // Calculate task rows directly in the component using state
   const taskRows = previewTask
-    ? CollisionService.getPreviewArrangement(
-        previewTask,
-        taskGroup.tasks,
-        viewMode,
-      )
-    : CollisionService.detectOverlaps(taskGroup.tasks, viewMode);
+    ? CollisionService.getPreviewArrangement(previewTask, groupTasks, viewMode)
+    : CollisionService.detectOverlaps(groupTasks, viewMode);
 
   // Calculate row height based on task arrangement
   const rowHeight = Math.max(60, taskRows.length * 40 + 20);
@@ -498,13 +494,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
   };
 
   const updateTooltipPosition = (e: React.MouseEvent | MouseEvent) => {
-    if (rowRef.current) {
-      const rect = rowRef.current.getBoundingClientRect();
-      setTooltipPosition({
-        x: e.clientX - rect.left + 20,
-        y: e.clientY - rect.top,
-      });
-    }
+    setTooltipPosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
   };
 
   const handleMouseDown = (
@@ -579,11 +572,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
     lastMousePositionRef.current = { x: e.clientX, y: e.clientY };
 
     // Update tooltip position
-    if (e instanceof MouseEvent && hoveredTask && rowRef.current) {
-      const rect = rowRef.current.getBoundingClientRect();
+    if (e instanceof MouseEvent && hoveredTask) {
       setTooltipPosition({
-        x: e.clientX - rect.left + 20,
-        y: e.clientY - rect.top,
+        x: e.clientX,
+        y: e.clientY,
       });
     } else if (!(e instanceof MouseEvent)) {
       updateTooltipPosition(e as React.MouseEvent);
@@ -765,7 +757,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
     // Call update handler with the final task
     if (onTaskUpdate && finalTask) {
       try {
-        onTaskUpdate(taskGroup.id, finalTask);
+        onTaskUpdate(taskGroupId, finalTask);
       } catch (error) {
         console.error("Error in onTaskUpdate:", error);
       }
@@ -824,7 +816,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
 
   // Handle progress update
   const handleProgressUpdate = (task: Task, newPercent: number) => {
-    if (onTaskUpdate && taskGroup.id) {
+    if (onTaskUpdate && hasValidTaskGroup) {
       try {
         // Create updated task with new progress percentage
         const updatedTask = {
@@ -833,7 +825,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
         };
 
         // Call the onTaskUpdate handler with the updated task
-        onTaskUpdate(taskGroup.id, updatedTask);
+        onTaskUpdate(taskGroupId, updatedTask);
       } catch (error) {
         console.error("Error updating task progress:", error);
       }
@@ -858,7 +850,15 @@ const TaskRow: React.FC<TaskRowProps> = ({
   }, []);
 
   // Handle empty task groups
-  if (!taskGroup.tasks || taskGroup.tasks.length === 0) {
+  if (!hasValidTaskGroup) {
+    return (
+      <div className="rmg-task-row rmg-task-row-invalid">
+        Invalid task group data
+      </div>
+    );
+  }
+
+  if (groupTasks.length === 0) {
     return (
       <div className="rmg-task-row rmg-task-row-empty">No tasks available</div>
     );
@@ -874,10 +874,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
       onMouseMove={(e) => handleMouseMove(e)}
       onMouseLeave={() => setHoveredTask(null)}
       ref={rowRef}
-      data-testid={`task-row-${taskGroup.id}`}
+      data-testid={`task-row-${taskGroupId}`}
       data-instance-id={instanceId.current}
       data-rmg-component="task-row"
-      data-group-id={taskGroup.id}
+      data-group-id={taskGroupId}
     >
       {/* Render tasks by row to prevent overlaps */}
       {taskRows.map((rowTasks, rowIndex) => (
@@ -957,6 +957,8 @@ const TaskRow: React.FC<TaskRowProps> = ({
           className={tooltipClassName}
           viewMode={viewMode}
           renderTooltip={renderTooltip}
+          renderTooltipInPortal={renderTooltipInPortal}
+          tooltipOffset={tooltipOffset}
         />
       )}
     </div>

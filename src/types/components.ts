@@ -29,11 +29,30 @@ export interface TooltipRenderProps {
   viewMode: ViewMode;
 }
 
+export interface GanttLabels {
+  minute: string;
+  hour: string;
+  day: string;
+  week: string;
+  month: string;
+  quarter: string;
+  year: string;
+  today: string;
+}
+
+export interface GanttLocaleText {
+  title?: string;
+  resources?: string;
+  today?: string;
+  viewModes?: Partial<Record<ViewMode, string>>;
+}
+
 export interface ViewModeSelectorRenderProps {
   activeMode: ViewMode;
   onChange: (mode: ViewMode) => void;
   darkMode: boolean;
   availableModes?: ViewMode[];
+  labels?: Partial<GanttLabels>;
 }
 
 export interface HeaderRenderProps {
@@ -75,6 +94,8 @@ export interface GanttChartProps {
   showProgress?: boolean;
   darkMode?: boolean;
   locale?: string;
+  localeText?: GanttLocaleText;
+  labels?: Partial<GanttLabels>;
   styles?: GanttStyles;
   viewMode?: ViewMode;
 
@@ -104,6 +125,8 @@ export interface GanttChartProps {
   renderTaskList?: (props: TaskListRenderProps) => React.ReactNode;
   renderTask?: (props: TaskRenderProps) => React.ReactNode;
   renderTooltip?: (props: TooltipRenderProps) => React.ReactNode;
+  renderTooltipInPortal?: boolean;
+  tooltipOffset?: number;
   renderViewModeSelector?: (
     props: ViewModeSelectorRenderProps,
   ) => React.ReactNode;
@@ -160,6 +183,8 @@ export interface TaskRowProps {
   // Custom render functions
   renderTask?: (props: TaskRenderProps) => React.ReactNode;
   renderTooltip?: (props: TooltipRenderProps) => React.ReactNode;
+  renderTooltipInPortal?: boolean;
+  tooltipOffset?: number;
   getTaskColor?: (props: TaskColorProps) => {
     backgroundColor: string;
     borderColor?: string;
@@ -235,6 +260,8 @@ export interface TooltipProps {
   className?: string;
   viewMode?: ViewMode;
   renderTooltip?: (props: TooltipRenderProps) => React.ReactNode;
+  renderTooltipInPortal?: boolean;
+  tooltipOffset?: number;
 }
 
 export interface TodayMarkerProps {

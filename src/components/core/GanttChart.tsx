@@ -41,18 +41,20 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
       tasks = [],
       startDate: customStartDate,
       endDate: customEndDate,
-      title = "Project Timeline",
+      title,
       currentDate = new Date(),
       showCurrentDateMarker = true,
-      todayLabel = "Today",
+      todayLabel,
       editMode = true, // Global master switch - default true
       allowProgressEdit = true, // Default true
       allowTaskResize = true, // Default true
       allowTaskMove = true, // Default true
-      headerLabel = "Resources",
+      headerLabel,
       showProgress = false,
       darkMode = false,
       locale = "default",
+      localeText,
+      labels = {},
       styles = {},
       viewMode = ViewMode.MONTH,
       viewModes, // Array of allowed view modes or false to hide
@@ -69,6 +71,8 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
       renderTaskList,
       renderTask,
       renderTooltip,
+      renderTooltipInPortal = true,
+      tooltipOffset = 12,
       renderViewModeSelector,
       renderHeader,
       renderTimelineHeader,
@@ -99,6 +103,39 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
 
     // Add a forceRender counter to trigger re-renders when tasks update
     const [forceRender, setForceRender] = useState<number>(0);
+
+    const fallbackLabels = {
+      minute: "Minute",
+      hour: "Hour",
+      day: "Day",
+      week: "Week",
+      month: "Month",
+      quarter: "Quarter",
+      year: "Year",
+      today: "Today",
+    };
+
+    const legacyLabels = {
+      minute: localeText?.viewModes?.[ViewMode.MINUTE],
+      hour: localeText?.viewModes?.[ViewMode.HOUR],
+      day: localeText?.viewModes?.[ViewMode.DAY],
+      week: localeText?.viewModes?.[ViewMode.WEEK],
+      month: localeText?.viewModes?.[ViewMode.MONTH],
+      quarter: localeText?.viewModes?.[ViewMode.QUARTER],
+      year: localeText?.viewModes?.[ViewMode.YEAR],
+      today: localeText?.today,
+    };
+
+    const resolvedLabels = {
+      ...fallbackLabels,
+      ...legacyLabels,
+      ...labels,
+    };
+
+    const resolvedTitle = title ?? localeText?.title ?? "Project Timeline";
+    const resolvedTodayLabel = todayLabel ?? resolvedLabels.today;
+    const resolvedHeaderLabel =
+      headerLabel ?? localeText?.resources ?? "Resources";
 
     // Calculate timeline bounds
     const derivedStartDate = customStartDate || findEarliestDate(tasks);
@@ -968,7 +1005,7 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
     const renderHeaderContent = () => {
       if (renderHeader) {
         return renderHeader({
-          title,
+          title: resolvedTitle,
           darkMode,
           viewMode: activeViewMode,
           onViewModeChange: handleViewModeChange,
@@ -980,7 +1017,7 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
         <div className="rmg-header">
           <div className="rmg-header-content">
             <h1 className={getComponentClassName("title", "rmg-title")}>
-              {title}
+              {resolvedTitle}
             </h1>
 
             {shouldShowViewModeSelector && (
@@ -991,6 +1028,7 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
                     onChange: handleViewModeChange,
                     darkMode,
                     availableModes: getAvailableViewModes() as ViewMode[],
+                    labels: resolvedLabels,
                   })
                 ) : (
                   <ViewModeSelector
@@ -998,6 +1036,7 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
                     onChange={handleViewModeChange}
                     darkMode={darkMode}
                     availableModes={getAvailableViewModes() as ViewMode[]}
+                    labels={resolvedLabels}
                   />
                 )}
               </div>
@@ -1066,14 +1105,14 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
           {renderTaskList ? (
             renderTaskList({
               tasks,
-              headerLabel,
+              headerLabel: resolvedHeaderLabel,
               onGroupClick,
               viewMode: activeViewMode,
             })
           ) : (
             <TaskList
               tasks={tasks}
-              headerLabel={headerLabel}
+              headerLabel={resolvedHeaderLabel}
               onGroupClick={onGroupClick}
               className={getComponentClassName("taskList", "rmg-task-list")}
               viewMode={activeViewMode}
@@ -1109,7 +1148,7 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
                       );
                       return total + Math.max(60, taskRows.length * 40 + 20);
                     }, 0)}
-                    label={todayLabel}
+                    label={resolvedTodayLabel}
                     dayOfMonth={currentDate.getDate()}
                     className={getComponentClassName(
                       "todayMarker",
@@ -1157,6 +1196,8 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
                       onTimelineExtend={handleTimelineExtension}
                       renderTask={renderTask}
                       renderTooltip={renderTooltip}
+                      renderTooltipInPortal={renderTooltipInPortal}
+                      tooltipOffset={tooltipOffset}
                       getTaskColor={getTaskColor}
                     />
                   );
