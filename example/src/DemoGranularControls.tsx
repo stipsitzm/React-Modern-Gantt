@@ -45,7 +45,7 @@ const initialTasks: TaskGroup[] = [
 export const DemoGranularControls: React.FC = () => {
   const [tasks, setTasks] = React.useState<TaskGroup[]>(initialTasks);
 
-  // Master switch
+  // Master mode selector
   const [editMode, setEditMode] = React.useState(true);
 
   // Granular controls
@@ -68,6 +68,10 @@ export const DemoGranularControls: React.FC = () => {
     );
   };
 
+  const handleModeChange = (mode: 'view' | 'edit') => {
+    setEditMode(mode === 'edit');
+  };
+
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Granular Editing Controls Demo</h2>
@@ -75,19 +79,42 @@ export const DemoGranularControls: React.FC = () => {
       <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
         <h3 className="font-semibold mb-3">Control Panel</h3>
 
-        {/* Master Switch */}
+        {/* Master mode selector */}
         <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded border border-blue-200 dark:border-blue-800">
-          <label className="flex items-center gap-2 font-medium text-blue-900 dark:text-blue-100">
-            <input
-              type="checkbox"
-              checked={editMode}
-              onChange={e => setEditMode(e.target.checked)}
-              className="w-4 h-4"
-            />
-            🔧 Edit Mode (Master Switch)
-          </label>
-          <p className="text-xs mt-1 text-blue-700 dark:text-blue-300 ml-6">
-            When OFF, disables ALL editing features below
+          <div className="font-medium text-blue-900 dark:text-blue-100">Modus</div>
+          <div
+            role="radiogroup"
+            aria-label="Modus auswählen"
+            className="mt-2 inline-flex w-full max-w-xs rounded-lg border border-blue-200 dark:border-blue-800 bg-white dark:bg-gray-900 p-1">
+            <label className="flex-1 cursor-pointer">
+              <input
+                type="radio"
+                name="mode"
+                value="view"
+                checked={!editMode}
+                onChange={() => handleModeChange('view')}
+                className="sr-only peer"
+              />
+              <span className="block rounded-md px-3 py-1.5 text-center text-sm font-medium transition-colors text-blue-900 dark:text-blue-100 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:shadow-sm hover:bg-blue-100 dark:hover:bg-blue-900/50 peer-checked:hover:bg-blue-600">
+                Ansicht
+              </span>
+            </label>
+            <label className="flex-1 cursor-pointer">
+              <input
+                type="radio"
+                name="mode"
+                value="edit"
+                checked={editMode}
+                onChange={() => handleModeChange('edit')}
+                className="sr-only peer"
+              />
+              <span className="block rounded-md px-3 py-1.5 text-center text-sm font-medium transition-colors text-blue-900 dark:text-blue-100 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:shadow-sm hover:bg-blue-100 dark:hover:bg-blue-900/50 peer-checked:hover:bg-blue-600">
+                Bearbeiten
+              </span>
+            </label>
+          </div>
+          <p className="text-xs mt-2 text-blue-700 dark:text-blue-300">
+            In „Ansicht“ sind alle Bearbeitungsfunktionen deaktiviert.
           </p>
         </div>
 
