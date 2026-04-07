@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { GanttChart, ViewMode, type TaskGroup } from "../src";
 
+const now = new Date();
 const tasks: TaskGroup[] = [
   {
     id: "group-1",
@@ -10,8 +11,8 @@ const tasks: TaskGroup[] = [
       {
         id: "task-1",
         name: "API Integration",
-        startDate: new Date(2026, 1, 1),
-        endDate: new Date(2026, 2, 1),
+        startDate: new Date(now.getFullYear(), now.getMonth() - 1, 1),
+        endDate: new Date(now.getFullYear(), now.getMonth() + 1, 1),
       },
     ],
   },

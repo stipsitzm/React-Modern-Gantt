@@ -99,6 +99,20 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
     const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
     const [viewUnitWidth, setViewUnitWidth] = useState<number>(150);
     const [isAutoScrolling, setIsAutoScrolling] = useState<boolean>(false);
+    const [isPanning, setIsPanning] = useState<boolean>(false);
+    const panStateRef = useRef<{
+      pointerId: number | null;
+      startClientX: number;
+      startClientY: number;
+      startScrollLeft: number;
+      startScrollTop: number;
+    }>({
+      pointerId: null,
+      startClientX: 0,
+      startClientY: 0,
+      startScrollLeft: 0,
+      startScrollTop: 0,
+    });
 
     // Add a forceRender counter to trigger re-renders when tasks update
     const [forceRender, setForceRender] = useState<number>(0);
@@ -606,6 +620,87 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
       }
     };
 
+    const interactivePanSelectors = [
+      '[data-rmg-component="task"]',
+      ".rmg-task-item",
+      ".rmg-task-item-custom",
+      ".rmg-progress-handle",
+      ".rmg-task-list",
+      ".rmg-task-list-header",
+    ].join(", ");
+
+    const panSurfaceSelectors = [
+      '[data-rmg-component="timeline-container"]',
+      '[data-rmg-component="timeline-content"]',
+      '[data-rmg-component="timeline-grid"]',
+      ".rmg-timeline-header",
+      ".rmg-timeline-header-higher",
+      ".rmg-timeline-cell",
+    ].join(", ");
+
+    const handlePanPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      const isTouch = event.pointerType === "touch";
+      if (!isTouch && event.button !== 0) return;
+      if (event.isPrimary === false) return;
+
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+
+      if (target.closest(interactivePanSelectors)) return;
+      if (!target.closest(panSurfaceSelectors)) return;
+
+      panStateRef.current = {
+        pointerId: event.pointerId,
+        startClientX: event.clientX,
+        startClientY: event.clientY,
+        startScrollLeft: container.scrollLeft,
+        startScrollTop: container.scrollTop,
+      };
+      setIsPanning(true);
+
+      container.setPointerCapture?.(event.pointerId);
+    };
+
+    const handlePanPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+      if (panStateRef.current.pointerId === null) return;
+      if (panStateRef.current.pointerId !== event.pointerId) return;
+
+      const deltaX = event.clientX - panStateRef.current.startClientX;
+      const deltaY = event.clientY - panStateRef.current.startClientY;
+
+      container.scrollLeft = panStateRef.current.startScrollLeft - deltaX;
+      container.scrollTop = panStateRef.current.startScrollTop - deltaY;
+
+      event.preventDefault();
+    };
+
+    const finishPanning = (
+      event: React.PointerEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>,
+    ) => {
+      const container = scrollContainerRef.current;
+      if (!container || panStateRef.current.pointerId === null) return;
+
+      const pointerEvent = "pointerId" in event ? event.pointerId : null;
+      if (
+        pointerEvent !== null &&
+        panStateRef.current.pointerId !== null &&
+        panStateRef.current.pointerId !== pointerEvent
+      ) {
+        return;
+      }
+
+      if (panStateRef.current.pointerId !== null) {
+        container.releasePointerCapture?.(panStateRef.current.pointerId);
+      }
+      panStateRef.current.pointerId = null;
+      setIsPanning(false);
+    };
+
     // Task interaction handlers
     const handleTaskUpdate = (groupId: string, updatedTask: Task) => {
       if (onTaskUpdate) {
@@ -1071,7 +1166,7 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
 
         <div
           ref={scrollContainerRef}
-          className={`rmg-container ${isAutoScrolling ? "rmg-auto-scrolling" : ""}`}
+          className={`rmg-container ${isAutoScrolling ? "rmg-auto-scrolling" : ""} ${isPanning ? "rmg-panning" : ""}`}
           data-rmg-component="container"
           style={
             maxHeight
@@ -1105,6 +1200,11 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
           <div
             className="rmg-timeline-container"
             data-rmg-component="timeline-container"
+            onPointerDown={handlePanPointerDown}
+            onPointerMove={handlePanPointerMove}
+            onPointerUp={finishPanning}
+            onPointerCancel={finishPanning}
+            onPointerLeave={finishPanning}
           >
             <div
               className="rmg-timeline-content"

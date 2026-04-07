@@ -128,6 +128,11 @@
   overflow: auto;
 }
 
+.rmg-container.rmg-panning {
+  cursor: grabbing;
+  user-select: none;
+}
+
 /* ======================================================
    4. Header und Titel
    ====================================================== */
