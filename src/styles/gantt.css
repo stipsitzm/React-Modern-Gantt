@@ -256,9 +256,19 @@
   color: var(--rmg-gray-600);
 }
 
+.rmg-task-group-level-top {
+  margin-left: 0;
+  font-weight: 600;
+  color: var(--rmg-text-color);
+}
+
 .rmg-task-group-level-bed {
   margin-left: 16px;
   color: var(--rmg-gray-700);
+}
+
+.rmg-task-group-level-bed-compact {
+  margin-left: 8px;
 }
 
 .rmg-dark .rmg-task-group-level-field {

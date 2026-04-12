@@ -83,6 +83,13 @@ const TaskList: React.FC<TaskListProps> = ({
     return parseHierarchyFromDescription(taskGroup.description);
   };
 
+  const uniqueLocations = new Set(
+    validTasks
+      .map((group) => getHierarchy(group)?.locationName?.trim())
+      .filter((location): location is string => Boolean(location)),
+  );
+  const showLocationLevel = uniqueLocations.size > 1;
+
   // Calculate height for each group based on tasks
   const getGroupHeight = (taskGroup: TaskGroup) => {
     if (!taskGroup.tasks || !Array.isArray(taskGroup.tasks)) {
@@ -120,7 +127,8 @@ const TaskList: React.FC<TaskListProps> = ({
         const groupHeight = getGroupHeight(taskGroup);
         const hierarchy = getHierarchy(taskGroup);
         const hasHierarchy = Boolean(
-          hierarchy?.locationName || hierarchy?.fieldName,
+          hierarchy?.fieldName ||
+          (showLocationLevel && hierarchy?.locationName),
         );
 
         return (
@@ -148,7 +156,7 @@ const TaskList: React.FC<TaskListProps> = ({
                   className="rmg-task-group-hierarchy"
                   data-rmg-component="task-group-hierarchy"
                 >
-                  {hierarchy?.locationName && (
+                  {showLocationLevel && hierarchy?.locationName && (
                     <div
                       className="rmg-task-group-level rmg-task-group-level-location"
                       title={hierarchy.locationName}
@@ -159,7 +167,9 @@ const TaskList: React.FC<TaskListProps> = ({
 
                   {hierarchy?.fieldName && (
                     <div
-                      className="rmg-task-group-level rmg-task-group-level-field"
+                      className={`rmg-task-group-level rmg-task-group-level-field ${
+                        !showLocationLevel ? "rmg-task-group-level-top" : ""
+                      }`}
                       title={hierarchy.fieldName}
                     >
                       {hierarchy.fieldName}
@@ -167,7 +177,11 @@ const TaskList: React.FC<TaskListProps> = ({
                   )}
 
                   <div
-                    className="rmg-task-group-level rmg-task-group-level-bed"
+                    className={`rmg-task-group-level rmg-task-group-level-bed ${
+                      !showLocationLevel && hierarchy?.fieldName
+                        ? "rmg-task-group-level-bed-compact"
+                        : ""
+                    }`}
                     title={taskGroup.name || hierarchy?.bedName || "Unnamed"}
                     data-rmg-component="task-group-name"
                   >
