@@ -1,6 +1,6 @@
 import * as React from "react";
 import GanttChart, { Task, TaskGroup } from "react-modern-gantt";
-import { hierarchyDemoData } from "./data";
+import { hierarchyDemoData, hierarchySingleLocationDemoData } from "./data";
 
 interface DemoHierarchyProps {
   darkMode: boolean;
@@ -8,6 +8,7 @@ interface DemoHierarchyProps {
 
 const DemoHierarchy: React.FC<DemoHierarchyProps> = ({ darkMode }) => {
   const [tasks, setTasks] = React.useState<TaskGroup[]>(hierarchyDemoData);
+  const [demoMode, setDemoMode] = React.useState<"multi" | "single">("multi");
 
   const handleTaskUpdate = (groupId: string, updatedTask: Task) => {
     setTasks((prevTasks) =>
@@ -27,7 +28,33 @@ const DemoHierarchy: React.FC<DemoHierarchyProps> = ({ darkMode }) => {
   return (
     <div>
       <div className="control-panel">
-        <button onClick={() => setTasks(hierarchyDemoData)}>Reset Demo</button>
+        <button
+          onClick={() => {
+            setDemoMode("multi");
+            setTasks(hierarchyDemoData);
+          }}
+        >
+          Multi-Standort Demo
+        </button>
+        <button
+          onClick={() => {
+            setDemoMode("single");
+            setTasks(hierarchySingleLocationDemoData);
+          }}
+        >
+          Single-Standort Demo
+        </button>
+        <button
+          onClick={() =>
+            setTasks(
+              demoMode === "single"
+                ? hierarchySingleLocationDemoData
+                : hierarchyDemoData,
+            )
+          }
+        >
+          Reset Current Demo
+        </button>
       </div>
 
       <GanttChart

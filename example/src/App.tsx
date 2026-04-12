@@ -215,8 +215,10 @@ const App: React.FC = () => {
           Demonstrates the hierarchical left-column rendering for resource
           groups while preserving semantics: <code>group.name</code> remains the
           bed row name, and <code>task.name</code> stays the crop label on bars.
-          This demo also includes fallback examples for parsed descriptions and
-          legacy flat rendering.
+          You can switch between a multi-Standort and single-Standort dataset
+          to verify conditional rendering (Standort hidden when only one exists),
+          plus fallback examples for parsed descriptions and legacy flat
+          rendering.
         </p>
         <DemoHierarchy darkMode={darkMode} />
       </div>

@@ -164,6 +164,57 @@ export const hierarchyDemoData: TaskGroup[] = [
   },
 ];
 
+// Hierarchy demo data with a single location (Field -> Bed should be displayed)
+export const hierarchySingleLocationDemoData: TaskGroup[] = [
+  {
+    id: "single-bed-1",
+    name: "Beet S1",
+    locationName: "Standort Einhof",
+    fieldName: "Parzelle Nord",
+    tasks: [
+      {
+        id: "single-crop-1",
+        name: "Spinat",
+        startDate: relativeDate(-8),
+        endDate: relativeDate(10),
+        color: "#0EA5E9",
+        percent: 35,
+      },
+    ],
+  },
+  {
+    id: "single-bed-2",
+    name: "Beet S2",
+    locationName: "Standort Einhof",
+    fieldName: "Parzelle Süd",
+    tasks: [
+      {
+        id: "single-crop-2",
+        name: "Radieschen",
+        startDate: relativeDate(-2),
+        endDate: relativeDate(14),
+        color: "#14B8A6",
+        percent: 20,
+      },
+    ],
+  },
+  {
+    id: "single-bed-3",
+    name: "Beet S3",
+    description: "Standort Einhof > Parzelle West",
+    tasks: [
+      {
+        id: "single-crop-3",
+        name: "Mangold",
+        startDate: relativeDate(3),
+        endDate: relativeDate(24),
+        color: "#8B5CF6",
+        percent: 5,
+      },
+    ],
+  },
+];
+
 // Complex data with more tasks and dependencies
 export const complexDemoData: TaskGroup[] = [
   {
