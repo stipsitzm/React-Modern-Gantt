@@ -215,8 +215,8 @@ const App: React.FC = () => {
           Demonstrates the hierarchical left-column rendering for resource
           groups while preserving semantics: <code>group.name</code> remains the
           bed row name, and <code>task.name</code> stays the crop label on bars.
-          Use the toggle to include or exclude the location level in the input
-          hierarchy path. The renderer reflects the provided hierarchy exactly:
+          Use the explicit mode buttons to switch the input hierarchy path. The
+          renderer reflects the provided hierarchy exactly:
           <code>Location → Field → Bed</code> or <code>Field → Bed</code>.
         </p>
         <DemoHierarchy darkMode={darkMode} />

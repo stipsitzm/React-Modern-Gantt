@@ -7,14 +7,15 @@ interface DemoHierarchyProps {
 }
 
 const DemoHierarchy: React.FC<DemoHierarchyProps> = ({ darkMode }) => {
-  const [showLocationLevel, setShowLocationLevel] = React.useState(true);
-  const [tasks, setTasks] = React.useState<TaskGroup[]>(
-    createHierarchyDemoData(true),
+  const [mode, setMode] = React.useState<"three-level" | "two-level">(
+    "three-level",
   );
+  const [tasks, setTasks] = React.useState<TaskGroup[]>(createHierarchyDemoData(true));
 
-  React.useEffect(() => {
-    setTasks(createHierarchyDemoData(showLocationLevel));
-  }, [showLocationLevel]);
+  const handleModeChange = (nextMode: "three-level" | "two-level") => {
+    setMode(nextMode);
+    setTasks(createHierarchyDemoData(nextMode === "three-level"));
+  };
 
   const handleTaskUpdate = (groupId: string, updatedTask: Task) => {
     setTasks((prevTasks) =>
@@ -34,16 +35,20 @@ const DemoHierarchy: React.FC<DemoHierarchyProps> = ({ darkMode }) => {
   return (
     <div>
       <div className="control-panel">
-        <label style={{ display: "inline-flex", gap: "8px", marginRight: "8px" }}>
-          <input
-            type="checkbox"
-            checked={showLocationLevel}
-            onChange={(event) => setShowLocationLevel(event.target.checked)}
-          />
-          Show location level
-        </label>
         <button
-          onClick={() => setTasks(createHierarchyDemoData(showLocationLevel))}
+          onClick={() => handleModeChange("three-level")}
+          data-active={mode === "three-level"}
+        >
+          Location → Field → Bed
+        </button>
+        <button
+          onClick={() => handleModeChange("two-level")}
+          data-active={mode === "two-level"}
+        >
+          Field → Bed
+        </button>
+        <button
+          onClick={() => setTasks(createHierarchyDemoData(mode === "three-level"))}
         >
           Reset Demo
         </button>

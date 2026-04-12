@@ -81,7 +81,7 @@ describe("TaskList hierarchy location visibility", () => {
       />,
     );
 
-    expect(screen.getByText("Location North Farm")).toBeInTheDocument();
+    expect(screen.getAllByText("Location Green Farm")).toHaveLength(3);
 
     rerender(
       <GanttChart
@@ -91,7 +91,7 @@ describe("TaskList hierarchy location visibility", () => {
       />,
     );
 
-    expect(screen.queryByText("Location North Farm")).not.toBeInTheDocument();
-    expect(screen.getByText("Field A")).toBeInTheDocument();
+    expect(screen.queryByText("Location Green Farm")).not.toBeInTheDocument();
+    expect(screen.getByText("Field North")).toBeInTheDocument();
   });
 });

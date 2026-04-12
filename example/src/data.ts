@@ -111,7 +111,11 @@ export const createHierarchyDemoData = (
     {
       id: "bed-1",
       name: "Bed A1",
-      hierarchyPath: withLocation("Field A", "Bed A1", "Location North Farm"),
+      hierarchyPath: withLocation(
+        "Field North",
+        "Bed A1",
+        "Location Green Farm",
+      ),
       tasks: [
         {
           id: "crop-1",
@@ -126,7 +130,11 @@ export const createHierarchyDemoData = (
     {
       id: "bed-2",
       name: "Bed B1",
-      hierarchyPath: withLocation("Field B", "Bed B1", "Location South Farm"),
+      hierarchyPath: withLocation(
+        "Field South",
+        "Bed B1",
+        "Location Green Farm",
+      ),
       tasks: [
         {
           id: "crop-2",
@@ -141,7 +149,11 @@ export const createHierarchyDemoData = (
     {
       id: "bed-3",
       name: "Bed C1",
-      hierarchyPath: withLocation("Field C", "Bed C1", "Location South Farm"),
+      hierarchyPath: withLocation(
+        "Field West",
+        "Bed C1",
+        "Location Green Farm",
+      ),
       tasks: [
         {
           id: "crop-3",
