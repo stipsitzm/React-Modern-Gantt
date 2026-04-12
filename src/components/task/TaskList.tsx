@@ -1,5 +1,5 @@
 import React from "react";
-import { TaskGroup, ViewMode, TaskListProps } from "@/types";
+import { TaskGroup, TaskListProps } from "@/types";
 import { CollisionService } from "@/services";
 
 /**
@@ -17,8 +17,106 @@ const TaskList: React.FC<TaskListProps> = ({
   viewMode,
   showTimelineHeader = true,
 }) => {
+  type ParsedHierarchy = {
+    locationName?: string;
+    fieldName?: string;
+    bedName?: string;
+  };
+
   // Validate task groups array
   const validTasks = Array.isArray(tasks) ? tasks : [];
+
+  const parseHierarchyFromDescription = (
+    description?: string,
+  ): ParsedHierarchy | null => {
+    if (!description) return null;
+
+    const trimmed = description.trim();
+    if (!trimmed) return null;
+
+    const multiLineParts = trimmed
+      .split("\n")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    if (multiLineParts.length >= 2) {
+      return {
+        locationName: multiLineParts[0],
+        fieldName: multiLineParts[1],
+        bedName: multiLineParts[2],
+      };
+    }
+
+    const separatorPatterns = [
+      /\s*>\s*/,
+      /\s*›\s*/,
+      /\s*→\s*/,
+      /\s*->\s*/,
+      /\s*\|\s*/,
+      /\s*\/\s*/,
+    ];
+
+    for (const separator of separatorPatterns) {
+      const parts = trimmed.split(separator).map((part) => part.trim());
+      if (parts.length >= 2 && parts.every(Boolean)) {
+        return {
+          locationName: parts[0],
+          fieldName: parts[1],
+          bedName: parts[2],
+        };
+      }
+    }
+
+    return null;
+  };
+
+  const getHierarchy = (taskGroup: TaskGroup): ParsedHierarchy | null => {
+    const explicitHierarchy: ParsedHierarchy = {
+      locationName: taskGroup.locationName,
+      fieldName: taskGroup.fieldName,
+      bedName: taskGroup.bedName,
+    };
+
+    if (explicitHierarchy.locationName || explicitHierarchy.fieldName) {
+      return explicitHierarchy;
+    }
+
+    return parseHierarchyFromDescription(taskGroup.description);
+  };
+
+  const getHierarchyLevels = (taskGroup: TaskGroup): string[] | null => {
+    const explicitPath = Array.isArray(taskGroup.hierarchyPath)
+      ? taskGroup.hierarchyPath
+          .map((level) => level?.trim())
+          .filter((level): level is string => Boolean(level))
+      : [];
+
+    if (explicitPath.length >= 2) {
+      return explicitPath;
+    }
+
+    const metadataLevels = [
+      taskGroup.locationName,
+      taskGroup.fieldName,
+      taskGroup.name || taskGroup.bedName || "Unnamed",
+    ].filter((level): level is string => Boolean(level?.trim()));
+
+    if (metadataLevels.length >= 2) {
+      return metadataLevels;
+    }
+
+    const parsedHierarchy = getHierarchy(taskGroup);
+    if (!parsedHierarchy) {
+      return null;
+    }
+
+    const parsedLevels = [
+      parsedHierarchy.locationName,
+      parsedHierarchy.fieldName,
+      taskGroup.name || parsedHierarchy.bedName || "Unnamed",
+    ].filter((level): level is string => Boolean(level?.trim()));
+
+    return parsedLevels.length >= 2 ? parsedLevels : null;
+  };
 
   // Calculate height for each group based on tasks
   const getGroupHeight = (taskGroup: TaskGroup) => {
@@ -55,6 +153,8 @@ const TaskList: React.FC<TaskListProps> = ({
         if (!taskGroup) return null;
 
         const groupHeight = getGroupHeight(taskGroup);
+        const hierarchyLevels = getHierarchyLevels(taskGroup);
+        const hasHierarchy = Boolean(hierarchyLevels);
 
         return (
           <div
@@ -76,20 +176,43 @@ const TaskList: React.FC<TaskListProps> = ({
                 />
               )}
 
-              {/* Group name */}
-              <div
-                className="rmg-task-group-name"
-                data-rmg-component="task-group-name"
-              >
-                {taskGroup.name || "Unnamed"}
-              </div>
+              {hasHierarchy ? (
+                <div
+                  className="rmg-task-group-hierarchy"
+                  data-rmg-component="task-group-hierarchy"
+                >
+                  {hierarchyLevels?.map((level, index) => (
+                    <div
+                      key={`task-group-${taskGroup.id}-level-${index}`}
+                      className={`rmg-task-group-level rmg-task-group-level-depth-${index}`}
+                      title={level}
+                      data-rmg-component={
+                        index === hierarchyLevels.length - 1
+                          ? "task-group-name"
+                          : undefined
+                      }
+                    >
+                      {level}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div
+                  className="rmg-task-group-name"
+                  data-rmg-component="task-group-name"
+                  title={taskGroup.name || "Unnamed"}
+                >
+                  {taskGroup.name || "Unnamed"}
+                </div>
+              )}
             </div>
 
             {/* Description (if available and enabled) */}
-            {showDescription && taskGroup.description && (
+            {showDescription && taskGroup.description && !hasHierarchy && (
               <div
                 className="rmg-task-group-description"
                 data-rmg-component="task-group-description"
+                title={taskGroup.description}
               >
                 {taskGroup.description}
               </div>

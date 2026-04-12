@@ -98,6 +98,76 @@ export const basicDemoData: TaskGroup[] = [
   },
 ];
 
+// Hierarchy demo data builder (input-driven hierarchyPath)
+export const createHierarchyDemoData = (
+  includeLocationLevel: boolean,
+): TaskGroup[] => {
+  const withLocation = (field: string, bed: string, location: string) =>
+    includeLocationLevel
+      ? [location, field, bed]
+      : [field, bed];
+
+  return [
+    {
+      id: "bed-1",
+      name: "Bed A1",
+      hierarchyPath: withLocation(
+        "Field North",
+        "Bed A1",
+        "Location Green Farm",
+      ),
+      tasks: [
+        {
+          id: "crop-1",
+          name: "Carrot",
+          startDate: relativeDate(-10),
+          endDate: relativeDate(12),
+          color: "#16A34A",
+          percent: 50,
+        },
+      ],
+    },
+    {
+      id: "bed-2",
+      name: "Bed B1",
+      hierarchyPath: withLocation(
+        "Field South",
+        "Bed B1",
+        "Location Green Farm",
+      ),
+      tasks: [
+        {
+          id: "crop-2",
+          name: "Lettuce",
+          startDate: relativeDate(-3),
+          endDate: relativeDate(8),
+          color: "#22C55E",
+          percent: 30,
+        },
+      ],
+    },
+    {
+      id: "bed-3",
+      name: "Bed C1",
+      hierarchyPath: withLocation(
+        "Field West",
+        "Bed C1",
+        "Location Green Farm",
+      ),
+      tasks: [
+        {
+          id: "crop-3",
+          name: "Beans",
+          startDate: relativeDate(2),
+          endDate: relativeDate(21),
+          color: "#3B82F6",
+          percent: 10,
+        },
+      ],
+    },
+  ];
+};
+
 // Complex data with more tasks and dependencies
 export const complexDemoData: TaskGroup[] = [
   {
