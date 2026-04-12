@@ -22,7 +22,7 @@ describe("TaskList hierarchy location visibility", () => {
       {
         id: "group-2",
         name: "Beet 2",
-        locationName: "Standort Nord",
+        locationName: "  standort   nord  ",
         fieldName: "Parzelle B",
         tasks: [createTask("task-2", "Salat")],
       },

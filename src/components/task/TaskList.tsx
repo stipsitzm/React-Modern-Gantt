@@ -83,9 +83,15 @@ const TaskList: React.FC<TaskListProps> = ({
     return parseHierarchyFromDescription(taskGroup.description);
   };
 
+  const normalizeHierarchyValue = (value?: string): string | null => {
+    if (!value) return null;
+    const normalized = value.trim().replace(/\s+/g, " ").toLocaleLowerCase();
+    return normalized || null;
+  };
+
   const uniqueLocations = new Set(
     validTasks
-      .map((group) => getHierarchy(group)?.locationName?.trim())
+      .map((group) => normalizeHierarchyValue(getHierarchy(group)?.locationName))
       .filter((location): location is string => Boolean(location)),
   );
   const showLocationLevel = uniqueLocations.size > 1;
