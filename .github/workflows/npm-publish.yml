@@ -4,6 +4,9 @@
 name: Node.js Package
 
 on:
+    pull_request:
+    push:
+        branches: [main]
     release:
         types: [created]
 
@@ -15,10 +18,12 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: 20
+                  cache: "npm"
             - run: npm ci
-            - run: npm test
+            - run: npm test -- --runInBand
 
     publish-npm:
+        if: github.event_name == 'release'
         needs: build
         runs-on: ubuntu-latest
         steps:
@@ -27,6 +32,7 @@ jobs:
               with:
                   node-version: 20
                   registry-url: https://registry.npmjs.org/
+                  cache: "npm"
             - run: npm ci
             - run: npm publish
               env:
