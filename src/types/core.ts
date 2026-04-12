@@ -13,6 +13,13 @@ export interface TaskGroup {
   id: string;
   name: string;
   description?: string;
+  /**
+   * Optional structured hierarchy metadata for rendering resource trees,
+   * e.g. Location -> Field -> Bed.
+   */
+  locationName?: string;
+  fieldName?: string;
+  bedName?: string;
   icon?: string;
   tasks: Task[];
   [key: string]: any;

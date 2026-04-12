@@ -234,6 +234,41 @@
   text-overflow: ellipsis;
 }
 
+.rmg-task-group-hierarchy {
+  min-width: 0;
+}
+
+.rmg-task-group-level {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+  font-size: 0.75rem;
+}
+
+.rmg-task-group-level-location {
+  font-weight: 600;
+  color: var(--rmg-text-color);
+}
+
+.rmg-task-group-level-field {
+  margin-left: 8px;
+  color: var(--rmg-gray-600);
+}
+
+.rmg-task-group-level-bed {
+  margin-left: 16px;
+  color: var(--rmg-gray-700);
+}
+
+.rmg-dark .rmg-task-group-level-field {
+  color: var(--rmg-gray-400);
+}
+
+.rmg-dark .rmg-task-group-level-bed {
+  color: var(--rmg-gray-300);
+}
+
 .rmg-task-group-description {
   font-size: 0.75rem;
   color: var(--rmg-gray-500);
