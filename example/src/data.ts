@@ -135,7 +135,9 @@ export const hierarchyDemoData: TaskGroup[] = [
   {
     id: "bed-legacy-1",
     name: "Bed B1",
-    description: "Location South Slope > Field B",
+    locationName: "Location South Slope",
+    fieldName: "Field B",
+    description: "Field B context",
     tasks: [
       {
         id: "crop-3",
@@ -185,7 +187,7 @@ export const hierarchySingleLocationDemoData: TaskGroup[] = [
   {
     id: "single-bed-2",
     name: "Bed S2",
-    locationName: " location  green farm ",
+    locationName: "Location Green Farm",
     fieldName: "Field South",
     tasks: [
       {
@@ -201,6 +203,7 @@ export const hierarchySingleLocationDemoData: TaskGroup[] = [
   {
     id: "single-bed-3",
     name: "Bed S3",
+    locationName: "Location Green Farm",
     fieldName: "Field West",
     tasks: [
       {

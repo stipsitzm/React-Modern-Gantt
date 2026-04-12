@@ -10,26 +10,27 @@ const createTask = (id: string, name: string) => ({
 });
 
 describe("TaskList hierarchy location visibility", () => {
-  test("hides the location level when all groups share one normalized location", () => {
+  test("hides the location level when all groups share one structured location", () => {
     const singleLocationTasks: TaskGroup[] = [
       {
         id: "group-1",
         name: "Bed 1",
-        locationName: "North Farm",
+        locationName: "Location Green Farm",
         fieldName: "Field A",
         tasks: [createTask("task-1", "Carrot")],
       },
       {
         id: "group-2",
         name: "Bed 2",
-        locationName: "  north   farm  ",
+        locationName: "Location Green Farm",
         fieldName: "Field B",
         tasks: [createTask("task-2", "Lettuce")],
       },
       {
         id: "group-3",
         name: "Bed 3",
-        description: "NORTH FARM > Field C",
+        locationName: "Location Green Farm",
+        fieldName: "Field C",
         tasks: [createTask("task-3", "Onion")],
       },
     ];
@@ -42,7 +43,7 @@ describe("TaskList hierarchy location visibility", () => {
       />,
     );
 
-    expect(screen.queryByText(/north farm/i)).not.toBeInTheDocument();
+    expect(screen.queryByText("Location Green Farm")).not.toBeInTheDocument();
     expect(screen.getByText("Field A")).toBeInTheDocument();
     expect(screen.getByText("Field B")).toBeInTheDocument();
     expect(screen.getByText("Field C")).toBeInTheDocument();
@@ -56,14 +57,14 @@ describe("TaskList hierarchy location visibility", () => {
       {
         id: "group-1",
         name: "Bed 1",
-        locationName: "North Farm",
+        locationName: "Location North Farm",
         fieldName: "Field A",
         tasks: [createTask("task-1", "Carrot")],
       },
       {
         id: "group-2",
         name: "Bed 2",
-        locationName: "South Farm",
+        locationName: "Location South Farm",
         fieldName: "Field C",
         tasks: [createTask("task-2", "Lettuce")],
       },
@@ -77,8 +78,8 @@ describe("TaskList hierarchy location visibility", () => {
       />,
     );
 
-    expect(screen.getByText("North Farm")).toBeInTheDocument();
-    expect(screen.getByText("South Farm")).toBeInTheDocument();
+    expect(screen.getByText("Location North Farm")).toBeInTheDocument();
+    expect(screen.getByText("Location South Farm")).toBeInTheDocument();
     expect(screen.getByText("Field A")).toBeInTheDocument();
     expect(screen.getByText("Field C")).toBeInTheDocument();
   });
