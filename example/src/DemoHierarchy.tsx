@@ -34,7 +34,7 @@ const DemoHierarchy: React.FC<DemoHierarchyProps> = ({ darkMode }) => {
             setTasks(hierarchyDemoData);
           }}
         >
-          Multi-Standort Demo
+          Multi-Location Demo
         </button>
         <button
           onClick={() => {
@@ -42,7 +42,7 @@ const DemoHierarchy: React.FC<DemoHierarchyProps> = ({ darkMode }) => {
             setTasks(hierarchySingleLocationDemoData);
           }}
         >
-          Single-Standort Demo
+          Single-Location Demo
         </button>
         <button
           onClick={() =>
@@ -60,7 +60,7 @@ const DemoHierarchy: React.FC<DemoHierarchyProps> = ({ darkMode }) => {
       <GanttChart
         tasks={tasks}
         title="OpenFarmPlanner Hierarchy Demo"
-        headerLabel="Anbauflächen"
+        headerLabel="Fields"
         darkMode={darkMode}
         showProgress={true}
         onTaskUpdate={handleTaskUpdate}

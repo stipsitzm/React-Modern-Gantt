@@ -102,13 +102,13 @@ export const basicDemoData: TaskGroup[] = [
 export const hierarchyDemoData: TaskGroup[] = [
   {
     id: "bed-1",
-    name: "Beet A1",
-    locationName: "Standort Nordhof",
-    fieldName: "Parzelle A",
+    name: "Bed A1",
+    locationName: "Location North Farm",
+    fieldName: "Field A",
     tasks: [
       {
         id: "crop-1",
-        name: "Karotte",
+        name: "Carrot",
         startDate: relativeDate(-10),
         endDate: relativeDate(12),
         color: "#16A34A",
@@ -118,13 +118,13 @@ export const hierarchyDemoData: TaskGroup[] = [
   },
   {
     id: "bed-2",
-    name: "Beet A2",
-    locationName: "Standort Nordhof",
-    fieldName: "Parzelle A",
+    name: "Bed A2",
+    locationName: "Location North Farm",
+    fieldName: "Field A",
     tasks: [
       {
         id: "crop-2",
-        name: "Salat",
+        name: "Lettuce",
         startDate: relativeDate(-3),
         endDate: relativeDate(8),
         color: "#22C55E",
@@ -134,12 +134,12 @@ export const hierarchyDemoData: TaskGroup[] = [
   },
   {
     id: "bed-legacy-1",
-    name: "Beet B1",
-    description: "Standort Südhang > Parzelle B",
+    name: "Bed B1",
+    description: "Location South Slope > Field B",
     tasks: [
       {
         id: "crop-3",
-        name: "Zwiebel",
+        name: "Onion",
         startDate: relativeDate(2),
         endDate: relativeDate(21),
         color: "#F59E0B",
@@ -149,12 +149,12 @@ export const hierarchyDemoData: TaskGroup[] = [
   },
   {
     id: "bed-flat-1",
-    name: "Beet C1",
+    name: "Bed C1",
     description: "Legacy flat description fallback",
     tasks: [
       {
         id: "crop-4",
-        name: "Bohnen",
+        name: "Beans",
         startDate: relativeDate(-6),
         endDate: relativeDate(16),
         color: "#3B82F6",
@@ -168,13 +168,13 @@ export const hierarchyDemoData: TaskGroup[] = [
 export const hierarchySingleLocationDemoData: TaskGroup[] = [
   {
     id: "single-bed-1",
-    name: "Beet S1",
-    locationName: "Standort Einhof",
-    fieldName: "Parzelle Nord",
+    name: "Bed S1",
+    locationName: "Location Green Farm",
+    fieldName: "Field North",
     tasks: [
       {
         id: "single-crop-1",
-        name: "Spinat",
+        name: "Spinach",
         startDate: relativeDate(-8),
         endDate: relativeDate(10),
         color: "#0EA5E9",
@@ -184,13 +184,13 @@ export const hierarchySingleLocationDemoData: TaskGroup[] = [
   },
   {
     id: "single-bed-2",
-    name: "Beet S2",
-    locationName: "Standort Einhof",
-    fieldName: "Parzelle Süd",
+    name: "Bed S2",
+    locationName: " location  green farm ",
+    fieldName: "Field South",
     tasks: [
       {
         id: "single-crop-2",
-        name: "Radieschen",
+        name: "Radish",
         startDate: relativeDate(-2),
         endDate: relativeDate(14),
         color: "#14B8A6",
@@ -200,12 +200,12 @@ export const hierarchySingleLocationDemoData: TaskGroup[] = [
   },
   {
     id: "single-bed-3",
-    name: "Beet S3",
-    description: "Standort Einhof > Parzelle West",
+    name: "Bed S3",
+    fieldName: "Field West",
     tasks: [
       {
         id: "single-crop-3",
-        name: "Mangold",
+        name: "Chard",
         startDate: relativeDate(3),
         endDate: relativeDate(24),
         color: "#8B5CF6",
