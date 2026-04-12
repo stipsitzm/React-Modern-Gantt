@@ -168,10 +168,10 @@ const TaskList: React.FC<TaskListProps> = ({
 
                   <div
                     className="rmg-task-group-level rmg-task-group-level-bed"
-                    title={taskGroup.name || "Unnamed"}
+                    title={taskGroup.name || hierarchy?.bedName || "Unnamed"}
                     data-rmg-component="task-group-name"
                   >
-                    {hierarchy?.bedName || taskGroup.name || "Unnamed"}
+                    {taskGroup.name || hierarchy?.bedName || "Unnamed"}
                   </div>
                 </div>
               ) : (

@@ -9,6 +9,7 @@ import { DemoGranularControls } from "./DemoGranularControls";
 import DemoStickyHeaders from "./DemoStickyHeaders";
 import DemoTimelineHeader from "./DemoTimelineHeader";
 import DemoTooltipPortal from "./DemoTooltipPortal";
+import DemoHierarchy from "./DemoHierarchy";
 
 const App: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -110,6 +111,12 @@ const App: React.FC = () => {
         >
           Tooltip Portal
         </div>
+        <div
+          className={`section-nav-link ${activeSection === "hierarchy" ? "active" : ""}`}
+          onClick={() => setActiveSection("hierarchy")}
+        >
+          Hierarchy Labels
+        </div>
       </nav>
 
       {/* Demo Sections */}
@@ -200,6 +207,18 @@ const App: React.FC = () => {
           containers.
         </p>
         <DemoTooltipPortal darkMode={darkMode} />
+      </div>
+
+      <div id="section-hierarchy" className="demo-section">
+        <h2 className="demo-title">Hierarchy Labels (Location → Field → Bed)</h2>
+        <p className="demo-description">
+          Demonstrates the hierarchical left-column rendering for resource
+          groups while preserving semantics: <code>group.name</code> remains the
+          bed row name, and <code>task.name</code> stays the crop label on bars.
+          This demo also includes fallback examples for parsed descriptions and
+          legacy flat rendering.
+        </p>
+        <DemoHierarchy darkMode={darkMode} />
       </div>
     </div>
   );

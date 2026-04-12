@@ -98,6 +98,72 @@ export const basicDemoData: TaskGroup[] = [
   },
 ];
 
+// Hierarchy demo data (Location -> Field -> Bed)
+export const hierarchyDemoData: TaskGroup[] = [
+  {
+    id: "bed-1",
+    name: "Beet A1",
+    locationName: "Standort Nordhof",
+    fieldName: "Parzelle A",
+    tasks: [
+      {
+        id: "crop-1",
+        name: "Karotte",
+        startDate: relativeDate(-10),
+        endDate: relativeDate(12),
+        color: "#16A34A",
+        percent: 50,
+      },
+    ],
+  },
+  {
+    id: "bed-2",
+    name: "Beet A2",
+    locationName: "Standort Nordhof",
+    fieldName: "Parzelle A",
+    tasks: [
+      {
+        id: "crop-2",
+        name: "Salat",
+        startDate: relativeDate(-3),
+        endDate: relativeDate(8),
+        color: "#22C55E",
+        percent: 30,
+      },
+    ],
+  },
+  {
+    id: "bed-legacy-1",
+    name: "Beet B1",
+    description: "Standort Südhang > Parzelle B",
+    tasks: [
+      {
+        id: "crop-3",
+        name: "Zwiebel",
+        startDate: relativeDate(2),
+        endDate: relativeDate(21),
+        color: "#F59E0B",
+        percent: 10,
+      },
+    ],
+  },
+  {
+    id: "bed-flat-1",
+    name: "Beet C1",
+    description: "Legacy flat description fallback",
+    tasks: [
+      {
+        id: "crop-4",
+        name: "Bohnen",
+        startDate: relativeDate(-6),
+        endDate: relativeDate(16),
+        color: "#3B82F6",
+        percent: 45,
+      },
+    ],
+  },
+];
+
 // Complex data with more tasks and dependencies
 export const complexDemoData: TaskGroup[] = [
   {
