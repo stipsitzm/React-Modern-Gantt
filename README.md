@@ -580,6 +580,7 @@ function App() {
 | `showCurrentDateMarker` | `boolean`         | `true`               | Show/hide the current time indicator line                                              |
 | `todayLabel`            | `string`          | `"Today"`            | Label for the current time marker; overrides `localeText.today`                        |
 | `headerLabel`           | `string`          | `"Resources"`        | Left column header; overrides `localeText.resources`                                   |
+| `leftColumnWidth`       | `number`          | `160`                | Fixed width (px) of the left resource column.                                          |
 | `title`                 | `string`          | `"Project Timeline"` | Header title; overrides `localeText.title`                                             |
 | `localeText`            | `GanttLocaleText` | `{}`                 | Optional UI translations/overrides for title, resources, today, and view mode labels   |
 | `renderTooltipInPortal` | `boolean`         | `true`               | Render task tooltips into `document.body` to avoid clipping inside overflow containers |
