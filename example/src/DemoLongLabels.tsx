@@ -8,6 +8,10 @@ interface DemoLongLabelsProps {
 
 const DemoLongLabels: React.FC<DemoLongLabelsProps> = ({ darkMode }) => {
   const [tasks, setTasks] = React.useState<TaskGroup[]>(longLabelDemoData);
+  const [leftColumnWidth, setLeftColumnWidth] = React.useState(160);
+  const [widthTestText, setWidthTestText] = React.useState(
+    "Demo-Text zum Testen der Spaltenbreite",
+  );
 
   const handleTaskUpdate = (groupId: string, updatedTask: Task) => {
     setTasks((previousTasks) =>
@@ -25,14 +29,54 @@ const DemoLongLabels: React.FC<DemoLongLabelsProps> = ({ darkMode }) => {
   };
 
   return (
-    <GanttChart
-      tasks={tasks}
-      title="Long Label Demo"
-      headerLabel="Locations"
-      darkMode={darkMode}
-      showProgress={true}
-      onTaskUpdate={handleTaskUpdate}
-    />
+    <div>
+      <div
+        style={{
+          display: "flex",
+          gap: "12px",
+          alignItems: "center",
+          flexWrap: "wrap",
+          marginBottom: "12px",
+        }}
+      >
+        <label>
+          Left column width:&nbsp;
+          <input
+            type="number"
+            min={120}
+            max={420}
+            value={leftColumnWidth}
+            onChange={(event) =>
+              setLeftColumnWidth(
+                Math.max(120, Number(event.target.value) || 120),
+              )
+            }
+          />
+        </label>
+      </div>
+
+      <div style={{ marginBottom: "12px" }}>
+        <label>
+          Breiten-Testfeld:&nbsp;
+          <input
+            type="text"
+            value={widthTestText}
+            onChange={(event) => setWidthTestText(event.target.value)}
+            style={{ width: `${leftColumnWidth}px`, maxWidth: "100%" }}
+          />
+        </label>
+      </div>
+
+      <GanttChart
+        tasks={tasks}
+        title="Long Label Demo"
+        headerLabel="Locations"
+        darkMode={darkMode}
+        showProgress={true}
+        leftColumnWidth={leftColumnWidth}
+        onTaskUpdate={handleTaskUpdate}
+      />
+    </div>
   );
 };
 
