@@ -160,7 +160,6 @@
    ====================================================== */
 .rmg-task-list {
   width: 160px;
-  --rmg-left-column-max-lines: 3;
   flex-shrink: 0;
   background-color: var(--rmg-bg-color);
   border-right: 1px solid var(--rmg-border-color);
@@ -231,12 +230,9 @@
 .rmg-task-group-name {
   font-weight: 500;
   white-space: normal;
-  overflow: hidden;
+  overflow: visible;
   overflow-wrap: anywhere;
   word-break: break-word;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: var(--rmg-left-column-max-lines, 3);
 }
 
 .rmg-task-group-hierarchy {
@@ -245,12 +241,9 @@
 
 .rmg-task-group-level {
   white-space: normal;
-  overflow: hidden;
+  overflow: visible;
   overflow-wrap: anywhere;
   word-break: break-word;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: var(--rmg-left-column-max-lines, 3);
   line-height: 1.1;
   font-size: 0.75rem;
 }

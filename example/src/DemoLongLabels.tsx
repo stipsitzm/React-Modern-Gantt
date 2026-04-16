@@ -9,7 +9,6 @@ interface DemoLongLabelsProps {
 const DemoLongLabels: React.FC<DemoLongLabelsProps> = ({ darkMode }) => {
   const [tasks, setTasks] = React.useState<TaskGroup[]>(longLabelDemoData);
   const [leftColumnWidth, setLeftColumnWidth] = React.useState(160);
-  const [leftColumnMaxLines, setLeftColumnMaxLines] = React.useState(3);
 
   const handleTaskUpdate = (groupId: string, updatedTask: Task) => {
     setTasks((previousTasks) =>
@@ -51,21 +50,6 @@ const DemoLongLabels: React.FC<DemoLongLabelsProps> = ({ darkMode }) => {
             }
           />
         </label>
-
-        <label>
-          Max label lines:&nbsp;
-          <input
-            type="number"
-            min={1}
-            max={6}
-            value={leftColumnMaxLines}
-            onChange={(event) =>
-              setLeftColumnMaxLines(
-                Math.max(1, Number(event.target.value) || 1),
-              )
-            }
-          />
-        </label>
       </div>
 
       <GanttChart
@@ -75,7 +59,6 @@ const DemoLongLabels: React.FC<DemoLongLabelsProps> = ({ darkMode }) => {
         darkMode={darkMode}
         showProgress={true}
         leftColumnWidth={leftColumnWidth}
-        leftColumnMaxLines={leftColumnMaxLines}
         onTaskUpdate={handleTaskUpdate}
       />
     </div>

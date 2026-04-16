@@ -17,7 +17,6 @@ const TaskList: React.FC<TaskListProps> = ({
   viewMode,
   showTimelineHeader = true,
   leftColumnWidth = 160,
-  leftColumnMaxLines = 3,
 }) => {
   type ParsedHierarchy = {
     locationName?: string;
@@ -28,7 +27,6 @@ const TaskList: React.FC<TaskListProps> = ({
   // Validate task groups array
   const validTasks = Array.isArray(tasks) ? tasks : [];
 
-  const normalizedMaxLines = Math.max(1, Math.floor(leftColumnMaxLines));
   const normalizedLeftColumnWidth = Math.max(120, Math.floor(leftColumnWidth));
 
   const estimateLabelHeight = (labels: string[]) => {
@@ -43,7 +41,7 @@ const TaskList: React.FC<TaskListProps> = ({
         1,
         Math.ceil(trimmedLabel.length / charsPerLine),
       );
-      return total + Math.min(normalizedMaxLines, wrappedLines);
+      return total + wrappedLines;
     }, 0);
 
     return Math.max(60, estimatedLabelLines * 16 + 28);
@@ -176,7 +174,6 @@ const TaskList: React.FC<TaskListProps> = ({
         width: `${normalizedLeftColumnWidth}px`,
         minWidth: `${normalizedLeftColumnWidth}px`,
         maxWidth: `${normalizedLeftColumnWidth}px`,
-        ["--rmg-left-column-max-lines" as string]: String(normalizedMaxLines),
       }}
     >
       {/* Header - CSS handles the height adjustment based on view mode */}

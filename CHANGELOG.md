@@ -4,14 +4,14 @@
 
 ### Added
 
-- New `leftColumnWidth` and `leftColumnMaxLines` props on `GanttChart` to configure left-column sizing and multi-line label clamping.
-- Long-label demo controls for left-column width and max visible label lines.
+- New `leftColumnWidth` prop on `GanttChart` to configure left-column sizing.
+- Long-label demo control for left-column width.
 
 ### Changed
 
 - Left column width can now be fixed via prop while remaining backward compatible with the previous default width (`160px`).
-- Left-column labels now clamp by line count (instead of single-line truncation), keep long-word wrapping, and preserve full text via tooltip titles.
-- Row-height estimation now uses the configured left-column width and max-line clamp so task rows and timeline bars stay aligned.
+- Left-column labels keep natural multi-line wrapping with long-word breaking and preserve full text via tooltip titles.
+- Row-height estimation now uses the configured left-column width so task rows and timeline bars stay aligned.
 
 ## 0.9.0 - 2026-04-13
 

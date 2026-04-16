@@ -51,7 +51,6 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
       allowTaskMove = true, // Default true
       headerLabel,
       leftColumnWidth = 160,
-      leftColumnMaxLines = 3,
       showProgress = false,
       darkMode = false,
       locale = "default",
@@ -1093,7 +1092,6 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
               onGroupClick,
               viewMode: activeViewMode,
               leftColumnWidth,
-              leftColumnMaxLines,
             })
           ) : (
             <TaskList
@@ -1105,7 +1103,6 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
               showTimelineHeader={showTimelineHeader}
               rowHeight={rowHeight}
               leftColumnWidth={leftColumnWidth}
-              leftColumnMaxLines={leftColumnMaxLines}
             />
           )}
 
@@ -1185,7 +1182,6 @@ const GanttChart = forwardRef<GanttChartRef, GanttChartProps>(
                       viewMode={activeViewMode}
                       rowHeight={rowHeight}
                       leftColumnWidth={leftColumnWidth}
-                      leftColumnMaxLines={leftColumnMaxLines}
                       scrollContainerRef={scrollContainerRef}
                       smoothDragging={smoothDragging}
                       movementThreshold={movementThreshold}
