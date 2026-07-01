@@ -78,22 +78,9 @@ const DevelopmentDemo: React.FC = () => {
     >
       <aside className="dev-demo__sidebar">
         <div className="dev-demo__brand">
-          <span className="dev-demo__eyebrow">
-            {isOpenFarmPlanner ? "OpenFarmPlanner" : "React Modern Gantt"}
-          </span>
-          <h1>{isOpenFarmPlanner ? "Anbaukalender" : "Development demo"}</h1>
+          <span className="dev-demo__eyebrow">React Modern Gantt</span>
+          <h1>Development demo</h1>
         </div>
-
-        {isOpenFarmPlanner && (
-          <nav className="dev-demo__ofp-nav" aria-label="OpenFarmPlanner areas">
-            <span>Übersicht</span>
-            <span>Anbauflächen</span>
-            <span>Kulturen</span>
-            <span>Anbaupläne</span>
-            <strong>Anbaukalender</strong>
-            <span>Ertragsübersicht</span>
-          </nav>
-        )}
 
         <div className="dev-demo__scenario-list" aria-label="Demo scenarios">
           {fixtures.map((fixture) => (
@@ -128,8 +115,6 @@ const DevelopmentDemo: React.FC = () => {
             <div className="dev-demo__ofp-farm">Gelawi Zwiebelzopf</div>
           </div>
         )}
-
-        {isOpenFarmPlanner && <div className="dev-demo__ofp-map-spacer" />}
 
         <header className="dev-demo__toolbar">
           <div>
