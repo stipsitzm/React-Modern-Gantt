@@ -114,4 +114,52 @@ describe("example fixture loader", () => {
     expect(scenario.fixture.chart?.allowTaskMove).toBe(true);
     expect(scenario.fixture.chart?.allowTaskResize).toBe(false);
   });
+
+  it("preserves both linked OpenFarmPlanner durations when drag updates include a changed end date", () => {
+    const scenario = createDemoScenario(
+      openFarmPlannerFixture as GanttFixture,
+      baseDate,
+    );
+    const group = scenario.tasks[1];
+    const growthTask = group.tasks.find(
+      (task) => task.id === "ofp-bohne-2-growth",
+    )!;
+    const harvestTask = group.tasks.find(
+      (task) => task.id === "ofp-bohne-2-harvest",
+    )!;
+    const dayMs = 24 * 60 * 60 * 1000;
+    const growthDuration =
+      growthTask.endDate.getTime() - growthTask.startDate.getTime();
+    const harvestDuration =
+      harvestTask.endDate.getTime() - harvestTask.startDate.getTime();
+
+    const updatedGroups = updateLinkedPeriodTask(
+      scenario.tasks,
+      group.id,
+      {
+        ...growthTask,
+        startDate: new Date(growthTask.startDate.getTime() + 14 * dayMs),
+        endDate: new Date(growthTask.endDate.getTime() + 21 * dayMs),
+      },
+      { preserveDurations: true },
+    );
+
+    const updatedGroup = updatedGroups.find(({ id }) => id === group.id)!;
+    const updatedGrowth = updatedGroup.tasks.find(
+      (task) => task.id === growthTask.id,
+    )!;
+    const updatedHarvest = updatedGroup.tasks.find(
+      (task) => task.id === harvestTask.id,
+    )!;
+
+    expect(
+      updatedGrowth.endDate.getTime() - updatedGrowth.startDate.getTime(),
+    ).toBe(growthDuration);
+    expect(
+      updatedHarvest.endDate.getTime() - updatedHarvest.startDate.getTime(),
+    ).toBe(harvestDuration);
+    expect(updatedHarvest.startDate.toISOString()).toBe(
+      new Date(harvestTask.startDate.getTime() + 14 * dayMs).toISOString(),
+    );
+  });
 });

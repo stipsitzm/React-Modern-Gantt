@@ -169,6 +169,7 @@ export const updateLinkedPeriodTask = (
   groups: TaskGroup[],
   groupId: string,
   updatedTask: Task,
+  options: { preserveDurations?: boolean } = {},
 ): TaskGroup[] => {
   const originalGroup = groups.find((group) => group.id === groupId);
   const originalTask = originalGroup?.tasks.find(
@@ -181,9 +182,18 @@ export const updateLinkedPeriodTask = (
     return updateScenarioTask(groups, groupId, updatedTask);
   }
 
-  const moved = isMoveUpdate(originalTask, updatedTask);
+  const moved =
+    options.preserveDurations || isMoveUpdate(originalTask, updatedTask);
   const moveDeltaMs =
     updatedTask.startDate.getTime() - originalTask.startDate.getTime();
+  const normalizedUpdatedTask = options.preserveDurations
+    ? {
+        ...updatedTask,
+        endDate: new Date(
+          updatedTask.startDate.getTime() + getDuration(originalTask),
+        ),
+      }
+    : updatedTask;
 
   return groups.map((group) =>
     group.id === groupId
@@ -191,7 +201,7 @@ export const updateLinkedPeriodTask = (
           ...group,
           tasks: group.tasks.map((task) => {
             if (task.id === updatedTask.id) {
-              return updatedTask;
+              return normalizedUpdatedTask;
             }
 
             if (task.cropId !== cropId) {

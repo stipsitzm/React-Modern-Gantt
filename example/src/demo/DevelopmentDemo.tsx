@@ -49,7 +49,9 @@ const DevelopmentDemo: React.FC = () => {
     setScenario((currentScenario) => ({
       ...currentScenario,
       tasks: isOpenFarmPlanner
-        ? updateLinkedPeriodTask(currentScenario.tasks, groupId, updatedTask)
+        ? updateLinkedPeriodTask(currentScenario.tasks, groupId, updatedTask, {
+            preserveDurations: true,
+          })
         : updateScenarioTask(currentScenario.tasks, groupId, updatedTask),
     }));
   };
