@@ -142,3 +142,83 @@ export const updateScenarioTask = (
         }
       : group,
   );
+
+const getDuration = (task: Task): number =>
+  task.endDate.getTime() - task.startDate.getTime();
+
+const shiftTask = (task: Task, deltaMs: number): Task => ({
+  ...task,
+  startDate: new Date(task.startDate.getTime() + deltaMs),
+  endDate: new Date(task.endDate.getTime() + deltaMs),
+});
+
+const isMoveUpdate = (originalTask: Task, updatedTask: Task): boolean => {
+  const startDelta =
+    updatedTask.startDate.getTime() - originalTask.startDate.getTime();
+  const endDelta =
+    updatedTask.endDate.getTime() - originalTask.endDate.getTime();
+
+  return (
+    startDelta !== 0 &&
+    startDelta === endDelta &&
+    getDuration(originalTask) === getDuration(updatedTask)
+  );
+};
+
+export const updateLinkedPeriodTask = (
+  groups: TaskGroup[],
+  groupId: string,
+  updatedTask: Task,
+): TaskGroup[] => {
+  const originalGroup = groups.find((group) => group.id === groupId);
+  const originalTask = originalGroup?.tasks.find(
+    (task) => task.id === updatedTask.id,
+  );
+  const cropId = updatedTask.cropId;
+  const periodType = updatedTask.periodType;
+
+  if (!originalGroup || !originalTask || typeof cropId !== "string") {
+    return updateScenarioTask(groups, groupId, updatedTask);
+  }
+
+  const moved = isMoveUpdate(originalTask, updatedTask);
+  const moveDeltaMs =
+    updatedTask.startDate.getTime() - originalTask.startDate.getTime();
+
+  return groups.map((group) =>
+    group.id === groupId
+      ? {
+          ...group,
+          tasks: group.tasks.map((task) => {
+            if (task.id === updatedTask.id) {
+              return updatedTask;
+            }
+
+            if (task.cropId !== cropId) {
+              return task;
+            }
+
+            if (moved) {
+              return shiftTask(task, moveDeltaMs);
+            }
+
+            if (periodType === "growth" && task.periodType === "harvest") {
+              return {
+                ...task,
+                startDate: new Date(updatedTask.endDate),
+              };
+            }
+
+            if (periodType === "harvest" && task.periodType === "growth") {
+              return {
+                ...task,
+                endDate: new Date(updatedTask.startDate),
+              };
+            }
+
+            return task;
+          }),
+        }
+      : group,
+  );
+};

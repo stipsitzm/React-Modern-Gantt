@@ -1,7 +1,9 @@
 import largeFixture from "../example/fixtures/large.json";
+import openFarmPlannerFixture from "../example/fixtures/openfarmplanner.json";
 import smallFixture from "../example/fixtures/small.json";
 import {
   createDemoScenario,
+  updateLinkedPeriodTask,
   updateScenarioTask,
 } from "../example/src/demo/fixtureLoader";
 import type { GanttFixture } from "../example/src/demo/types";
@@ -42,5 +44,64 @@ describe("example fixture loader", () => {
 
     expect(updatedGroups[0].tasks[0].name).toBe("Updated task");
     expect(updatedGroups[1]).toBe(scenario.tasks[1]);
+  });
+
+  it("moves linked OpenFarmPlanner growth and harvest periods together", () => {
+    const scenario = createDemoScenario(
+      openFarmPlannerFixture as GanttFixture,
+      baseDate,
+    );
+    const group = scenario.tasks[1];
+    const growthTask = group.tasks.find(
+      (task) => task.id === "ofp-bohne-2-growth",
+    )!;
+    const harvestTask = group.tasks.find(
+      (task) => task.id === "ofp-bohne-2-harvest",
+    )!;
+    const dayMs = 24 * 60 * 60 * 1000;
+
+    const updatedGroups = updateLinkedPeriodTask(scenario.tasks, group.id, {
+      ...growthTask,
+      startDate: new Date(growthTask.startDate.getTime() + 7 * dayMs),
+      endDate: new Date(growthTask.endDate.getTime() + 7 * dayMs),
+    });
+
+    const updatedGroup = updatedGroups.find(({ id }) => id === group.id)!;
+    const updatedHarvest = updatedGroup.tasks.find(
+      (task) => task.id === harvestTask.id,
+    )!;
+
+    expect(updatedHarvest.startDate.toISOString()).toBe(
+      new Date(harvestTask.startDate.getTime() + 7 * dayMs).toISOString(),
+    );
+    expect(updatedHarvest.endDate.toISOString()).toBe(
+      new Date(harvestTask.endDate.getTime() + 7 * dayMs).toISOString(),
+    );
+  });
+
+  it("keeps linked OpenFarmPlanner growth and harvest boundaries together when resized", () => {
+    const scenario = createDemoScenario(
+      openFarmPlannerFixture as GanttFixture,
+      baseDate,
+    );
+    const group = scenario.tasks[1];
+    const growthTask = group.tasks.find(
+      (task) => task.id === "ofp-bohne-2-growth",
+    )!;
+    const resizedGrowthEnd = new Date("2026-03-01T00:00:00.000Z");
+
+    const updatedGroups = updateLinkedPeriodTask(scenario.tasks, group.id, {
+      ...growthTask,
+      endDate: resizedGrowthEnd,
+    });
+
+    const updatedGroup = updatedGroups.find(({ id }) => id === group.id)!;
+    const updatedHarvest = updatedGroup.tasks.find(
+      (task) => task.id === "ofp-bohne-2-harvest",
+    )!;
+
+    expect(updatedHarvest.startDate.toISOString()).toBe(
+      resizedGrowthEnd.toISOString(),
+    );
   });
 });

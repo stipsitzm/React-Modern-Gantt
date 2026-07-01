@@ -1,6 +1,10 @@
 import * as React from "react";
 import GanttChart, { Task, TaskGroup, ViewMode } from "react-modern-gantt";
-import { createDemoScenario, updateScenarioTask } from "./fixtureLoader";
+import {
+  createDemoScenario,
+  updateLinkedPeriodTask,
+  updateScenarioTask,
+} from "./fixtureLoader";
 import { fixtures } from "./fixtures";
 import type { DemoScenario } from "./types";
 
@@ -39,10 +43,14 @@ const DevelopmentDemo: React.FC = () => {
     setActiveViewMode(activeFixture.viewMode);
   };
 
+  const isOpenFarmPlanner = activeFixture.id === "openfarmplanner";
+
   const handleTaskUpdate = (groupId: string, updatedTask: Task) => {
     setScenario((currentScenario) => ({
       ...currentScenario,
-      tasks: updateScenarioTask(currentScenario.tasks, groupId, updatedTask),
+      tasks: isOpenFarmPlanner
+        ? updateLinkedPeriodTask(currentScenario.tasks, groupId, updatedTask)
+        : updateScenarioTask(currentScenario.tasks, groupId, updatedTask),
     }));
   };
 
@@ -61,7 +69,6 @@ const DevelopmentDemo: React.FC = () => {
   const chartProps = activeFixture.chart ?? {};
   const rowCount = scenario.tasks.length;
   const taskCount = countTasks(scenario.tasks);
-  const isOpenFarmPlanner = activeFixture.id === "openfarmplanner";
 
   return (
     <div
