@@ -1,0 +1,130 @@
+{
+  "id": "openfarmplanner",
+  "name": "OpenFarmPlanner-like",
+  "description": "Agricultural planning shape with location, field, bed hierarchy, long labels, multiple crops per bed, overlaps, and seasonal colors.",
+  "viewMode": "week",
+  "viewModes": ["day", "week", "month", "quarter", "year"],
+  "timeline": {
+    "startDate": { "offsetDays": -90 },
+    "endDate": { "offsetDays": 220 }
+  },
+  "chart": {
+    "title": "Farm crop planning fixture",
+    "headerLabel": "Location / Field / Bed",
+    "showProgress": true,
+    "showCurrentDateMarker": true,
+    "editMode": true,
+    "allowTaskMove": true,
+    "allowTaskResize": true,
+    "allowProgressEdit": true,
+    "rowHeight": 52,
+    "leftColumnWidth": 340,
+    "maxHeight": 560
+  },
+  "groups": [
+    {
+      "id": "ofp-green-north-a1",
+      "name": "Bed A1",
+      "description": "Mixed spring succession",
+      "hierarchyPath": ["Regenbogenland", "11 Frucht", "1 Lichtwurzel"],
+      "locationName": "Regenbogenland",
+      "fieldName": "11 Frucht",
+      "bedName": "1 Lichtwurzel",
+      "tasks": [
+        {
+          "id": "ofp-carrot-a1",
+          "name": "Carrot sowing and cultivation",
+          "startDate": { "offsetDays": -42 },
+          "endDate": { "offsetDays": 58 },
+          "color": "#16a34a",
+          "percent": 45
+        },
+        {
+          "id": "ofp-radish-a1",
+          "name": "Radish quick crop",
+          "startDate": { "offsetDays": -20 },
+          "endDate": { "offsetDays": 12 },
+          "color": "#db2777",
+          "percent": 80
+        }
+      ]
+    },
+    {
+      "id": "ofp-green-north-a2",
+      "name": "Bed A2 with an intentionally long readable label",
+      "description": "Long label wrapping",
+      "hierarchyPath": [
+        "Regenbogenland",
+        "11 Frucht",
+        "2 Sonnenwurzel mit sehr langem Beetnamen"
+      ],
+      "locationName": "Regenbogenland",
+      "fieldName": "11 Frucht",
+      "bedName": "2 Sonnenwurzel mit sehr langem Beetnamen",
+      "tasks": [
+        {
+          "id": "ofp-lettuce-a2",
+          "name": "Lettuce transplants",
+          "startDate": { "offsetDays": -12 },
+          "endDate": { "offsetDays": 45 },
+          "color": "#65a30d",
+          "percent": 35
+        },
+        {
+          "id": "ofp-beans-a2",
+          "name": "Beans follow-up crop",
+          "startDate": { "offsetDays": 46 },
+          "endDate": { "offsetDays": 132 },
+          "color": "#0d9488",
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "id": "ofp-west-b4",
+      "name": "Bed B4",
+      "description": "Greenhouse tomatoes",
+      "hierarchyPath": ["Glashaus West", "Tomatenhaus", "B4"],
+      "locationName": "Glashaus West",
+      "fieldName": "Tomatenhaus",
+      "bedName": "B4",
+      "tasks": [
+        {
+          "id": "ofp-tomato-b4",
+          "name": "Tomato season",
+          "startDate": { "offsetDays": -28 },
+          "endDate": { "offsetDays": 165 },
+          "color": "#dc2626",
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "id": "ofp-east-c7",
+      "name": "Bed C7",
+      "description": "Late brassicas",
+      "hierarchyPath": ["Acker Ost", "Kohl Rotation", "C7"],
+      "locationName": "Acker Ost",
+      "fieldName": "Kohl Rotation",
+      "bedName": "C7",
+      "tasks": [
+        {
+          "id": "ofp-cabbage-c7",
+          "name": "Cabbage nursery to harvest",
+          "startDate": { "offsetDays": 18 },
+          "endDate": { "offsetDays": 150 },
+          "color": "#4f46e5",
+          "percent": 10
+        },
+        {
+          "id": "ofp-cover-c7",
+          "name": "Cover crop",
+          "startDate": { "offsetDays": 152 },
+          "endDate": { "offsetDays": 210 },
+          "color": "#0891b2",
+          "percent": 0
+        }
+      ]
+    }
+  ]
+}

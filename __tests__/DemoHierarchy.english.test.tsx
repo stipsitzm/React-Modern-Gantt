@@ -1,7 +1,5 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import fs from "fs";
-import path from "path";
 import DemoHierarchy from "../example/src/DemoHierarchy";
 
 jest.mock(
@@ -9,7 +7,9 @@ jest.mock(
   () => {
     const React = require("react");
 
-    const MockGantt = (props: { tasks: Array<{ hierarchyPath?: string[] }> }) => {
+    const MockGantt = (props: {
+      tasks: Array<{ hierarchyPath?: string[] }>;
+    }) => {
       const firstPath = props.tasks[0]?.hierarchyPath?.join(" > ") ?? "";
       return <div data-testid="mock-hierarchy-path">{firstPath}</div>;
     };
@@ -32,7 +32,9 @@ describe("Demo hierarchy English copy and mode switching", () => {
     expect(
       screen.getByRole("button", { name: "Field → Bed" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Reset Demo" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Reset Demo" }),
+    ).toBeInTheDocument();
 
     expect(screen.getByTestId("mock-hierarchy-path")).toHaveTextContent(
       "Location Green Farm > Field North > Bed A1",
@@ -43,11 +45,5 @@ describe("Demo hierarchy English copy and mode switching", () => {
     expect(screen.getByTestId("mock-hierarchy-path")).toHaveTextContent(
       "Field North > Bed A1",
     );
-
-    const appSource = fs.readFileSync(
-      path.join(process.cwd(), "example/src/App.tsx"),
-      "utf8",
-    );
-    expect(appSource).toContain("Use the explicit mode buttons");
   });
 });

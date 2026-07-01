@@ -134,6 +134,88 @@ function App() {
 > `import "react-modern-gantt/dist/index.css";`
 > Without this import, the component will not be styled correctly.
 
+## 🛠️ Local Development Demo
+
+This repository includes a standalone Vite demo in `example/` for developing the
+library without starting OpenFarmPlanner.
+
+### Project Structure
+
+```text
+React-Modern-Gantt/
+├── src/                 # Library source
+├── __tests__/           # Jest tests
+├── example/
+│   ├── fixtures/        # JSON scenario data used by the demo
+│   ├── src/demo/        # Fixture loader and development demo shell
+│   └── vite.config.ts   # Aliases react-modern-gantt to ../src/index.ts
+└── README.md
+```
+
+### Start the Demo
+
+```bash
+npm run demo
+```
+
+The Vite app imports `react-modern-gantt` through an alias to `../src/index.ts`,
+so changes in `src/` are visible immediately through hot reload. No publish,
+pack, or OpenFarmPlanner startup step is required.
+
+### Fixtures
+
+Demo data lives in `example/fixtures/`:
+
+- `small.json`
+- `large.json`
+- `openfarmplanner.json`
+- `overlap.json`
+- `zoom.json`
+
+Fixture tasks use JSON-friendly dates. Use either an ISO date string or a
+relative date object:
+
+```json
+{
+  "startDate": { "offsetDays": -7 },
+  "endDate": { "offsetDays": 21 }
+}
+```
+
+`offsetDays`, `offsetHours`, and `offsetMinutes` are resolved relative to the
+current time when the scenario loads. The large fixture can use a JSON generator
+entry to produce many similar rows while keeping the fixture readable.
+
+### Add a Fixture
+
+1. Add a new JSON file under `example/fixtures/`.
+2. Follow the existing shape: `id`, `name`, `description`, `viewMode`,
+   `viewModes`, optional `timeline`, optional `chart`, and `groups`.
+3. Import and append it in `example/src/demo/fixtures.ts`.
+
+### Add a Scenario
+
+Most new scenarios only need a fixture. If a scenario needs extra controls,
+extend `example/src/demo/DevelopmentDemo.tsx` and keep transformation logic in
+`example/src/demo/fixtureLoader.ts` so the Library continues to receive plain
+`TaskGroup[]` data.
+
+### Development Workflow
+
+```bash
+npm install
+cd example && npm install
+cd ..
+npm run demo
+npm test
+npm run demo:build
+```
+
+Use the demo to exercise small and large datasets, OpenFarmPlanner-like
+hierarchies, zoom levels, overlapping bars, long labels, multiple bars per row,
+drag and drop, resize, the current date marker, and horizontal or vertical
+scrolling.
+
 ### Using CSS styles
 
 The Gantt chart requires CSS styles that are shipped separately from the component code. You have two options:

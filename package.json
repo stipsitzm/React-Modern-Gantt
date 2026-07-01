@@ -12,6 +12,8 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
+        "demo": "cd example && npm start",
+        "demo:build": "cd example && npm run build",
         "start": "npm run dev & npm run start:example",
         "start:example": "cd example && npm start",
         "lint": "eslint src --ext .ts,.tsx",
