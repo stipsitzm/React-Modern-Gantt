@@ -104,4 +104,14 @@ describe("example fixture loader", () => {
       resizedGrowthEnd.toISOString(),
     );
   });
+
+  it("configures OpenFarmPlanner periods as movable with fixed duration", () => {
+    const scenario = createDemoScenario(
+      openFarmPlannerFixture as GanttFixture,
+      baseDate,
+    );
+
+    expect(scenario.fixture.chart?.allowTaskMove).toBe(true);
+    expect(scenario.fixture.chart?.allowTaskResize).toBe(false);
+  });
 });

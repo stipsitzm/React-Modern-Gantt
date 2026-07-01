@@ -15,7 +15,7 @@
     "showCurrentDateMarker": true,
     "editMode": true,
     "allowTaskMove": true,
-    "allowTaskResize": true,
+    "allowTaskResize": false,
     "allowProgressEdit": false,
     "rowHeight": 34,
     "leftColumnWidth": 210,
