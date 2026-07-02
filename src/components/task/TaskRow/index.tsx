@@ -3,6 +3,11 @@ import { Task, ViewMode, TaskRowProps } from "@/types";
 import { TaskService, CollisionService } from "@/services";
 import TaskItem from "@/components/task/TaskItem";
 import { Tooltip } from "@/components/ui";
+import {
+  estimateLabelHeight,
+  getHierarchyLevels,
+  getLabelLinesSource,
+} from "@/utils";
 
 /**
  * TaskRow Component - Displays and manages tasks for a single task group
@@ -132,32 +137,16 @@ const TaskRow: React.FC<TaskRowProps> = ({
 
   // Calculate row height based on task arrangement
   const laneHeight = Math.max(1, rowHeight);
-  const hierarchyPath = Array.isArray(taskGroup?.hierarchyPath)
-    ? taskGroup.hierarchyPath.filter(Boolean)
+  const hierarchyLevels = taskGroup ? getHierarchyLevels(taskGroup) : null;
+  const labelLinesSource = taskGroup
+    ? getLabelLinesSource(taskGroup, hierarchyLevels)
     : [];
-  const labelLinesSource =
-    hierarchyPath.length > 0
-      ? hierarchyPath
-      : [taskGroup?.name || "Unnamed", taskGroup?.description || ""].filter(
-          Boolean,
-        );
-  const normalizedLeftColumnWidth = Math.max(120, Math.floor(leftColumnWidth));
-  const charsPerLine = Math.max(
-    12,
-    Math.floor((normalizedLeftColumnWidth - 24) / 7),
+  const estimatedHeight = estimateLabelHeight(
+    labelLinesSource,
+    leftColumnWidth,
   );
-  const estimatedLabelLines = labelLinesSource.reduce((total, label) => {
-    const trimmedLabel = label.trim();
-    if (!trimmedLabel) return total;
-    const wrappedLines = Math.max(
-      1,
-      Math.ceil(trimmedLabel.length / charsPerLine),
-    );
-    return total + wrappedLines;
-  }, 0);
-  const estimatedLabelHeight = Math.max(60, estimatedLabelLines * 16 + 28);
   const resolvedRowHeight = Math.max(
-    estimatedLabelHeight,
+    estimatedHeight,
     taskRows.length * laneHeight + 20,
   );
 

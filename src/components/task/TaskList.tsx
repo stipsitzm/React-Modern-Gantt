@@ -1,6 +1,12 @@
 import React from "react";
 import { TaskGroup, TaskListProps } from "@/types";
 import { CollisionService } from "@/services";
+import {
+  estimateLabelHeight,
+  getHierarchyLevels,
+  getLabelLinesSource,
+  normalizeLeftColumnWidth,
+} from "@/utils";
 
 /**
  * TaskList Component - Displays the list of task groups on the left side of the Gantt chart
@@ -18,145 +24,31 @@ const TaskList: React.FC<TaskListProps> = ({
   showTimelineHeader = true,
   leftColumnWidth = 160,
 }) => {
-  type ParsedHierarchy = {
-    locationName?: string;
-    fieldName?: string;
-    bedName?: string;
-  };
-
   // Validate task groups array
   const validTasks = Array.isArray(tasks) ? tasks : [];
 
-  const normalizedLeftColumnWidth = Math.max(120, Math.floor(leftColumnWidth));
-
-  const estimateLabelHeight = (labels: string[]) => {
-    const charsPerLine = Math.max(
-      12,
-      Math.floor((normalizedLeftColumnWidth - 24) / 7),
-    );
-    const estimatedLabelLines = labels.reduce((total, label) => {
-      const trimmedLabel = label.trim();
-      if (!trimmedLabel) return total;
-      const wrappedLines = Math.max(
-        1,
-        Math.ceil(trimmedLabel.length / charsPerLine),
-      );
-      return total + wrappedLines;
-    }, 0);
-
-    return Math.max(60, estimatedLabelLines * 16 + 28);
-  };
-  const parseHierarchyFromDescription = (
-    description?: string,
-  ): ParsedHierarchy | null => {
-    if (!description) return null;
-
-    const trimmed = description.trim();
-    if (!trimmed) return null;
-
-    const multiLineParts = trimmed
-      .split("\n")
-      .map((part) => part.trim())
-      .filter(Boolean);
-    if (multiLineParts.length >= 2) {
-      return {
-        locationName: multiLineParts[0],
-        fieldName: multiLineParts[1],
-        bedName: multiLineParts[2],
-      };
-    }
-
-    const separatorPatterns = [
-      /\s*>\s*/,
-      /\s*›\s*/,
-      /\s*→\s*/,
-      /\s*->\s*/,
-      /\s*\|\s*/,
-      /\s*\/\s*/,
-    ];
-
-    for (const separator of separatorPatterns) {
-      const parts = trimmed.split(separator).map((part) => part.trim());
-      if (parts.length >= 2 && parts.every(Boolean)) {
-        return {
-          locationName: parts[0],
-          fieldName: parts[1],
-          bedName: parts[2],
-        };
-      }
-    }
-
-    return null;
-  };
-
-  const getHierarchy = (taskGroup: TaskGroup): ParsedHierarchy | null => {
-    const explicitHierarchy: ParsedHierarchy = {
-      locationName: taskGroup.locationName,
-      fieldName: taskGroup.fieldName,
-      bedName: taskGroup.bedName,
-    };
-
-    if (explicitHierarchy.locationName || explicitHierarchy.fieldName) {
-      return explicitHierarchy;
-    }
-
-    return parseHierarchyFromDescription(taskGroup.description);
-  };
-
-  const getHierarchyLevels = (taskGroup: TaskGroup): string[] | null => {
-    const explicitPath = Array.isArray(taskGroup.hierarchyPath)
-      ? taskGroup.hierarchyPath
-          .map((level) => level?.trim())
-          .filter((level): level is string => Boolean(level))
-      : [];
-
-    if (explicitPath.length >= 2) {
-      return explicitPath;
-    }
-
-    const metadataLevels = [
-      taskGroup.locationName,
-      taskGroup.fieldName,
-      taskGroup.name || taskGroup.bedName || "Unnamed",
-    ].filter((level): level is string => Boolean(level?.trim()));
-
-    if (metadataLevels.length >= 2) {
-      return metadataLevels;
-    }
-
-    const parsedHierarchy = getHierarchy(taskGroup);
-    if (!parsedHierarchy) {
-      return null;
-    }
-
-    const parsedLevels = [
-      parsedHierarchy.locationName,
-      parsedHierarchy.fieldName,
-      taskGroup.name || parsedHierarchy.bedName || "Unnamed",
-    ].filter((level): level is string => Boolean(level?.trim()));
-
-    return parsedLevels.length >= 2 ? parsedLevels : null;
-  };
+  const normalizedLeftColumnWidth = normalizeLeftColumnWidth(leftColumnWidth);
 
   // Calculate height for each group based on tasks
   const getGroupHeight = (taskGroup: TaskGroup) => {
     const hierarchyLevels = getHierarchyLevels(taskGroup);
-    const hasHierarchy = Boolean(hierarchyLevels);
-    const labelLinesSource = hasHierarchy
-      ? hierarchyLevels || []
-      : [
-          taskGroup.name || "Unnamed",
-          showDescription ? (taskGroup.description ?? "") : "",
-        ].filter(Boolean);
-    const estimatedLabelHeight = estimateLabelHeight(labelLinesSource);
+    const labelLinesSource = getLabelLinesSource(
+      taskGroup,
+      hierarchyLevels,
+      showDescription,
+    );
+    const estimatedHeight = estimateLabelHeight(
+      labelLinesSource,
+      normalizedLeftColumnWidth,
+    );
 
     if (!taskGroup.tasks || !Array.isArray(taskGroup.tasks)) {
-      return estimatedLabelHeight;
+      return estimatedHeight;
     }
 
     const taskRows = CollisionService.detectOverlaps(taskGroup.tasks, viewMode);
     const taskHeight = Math.max(60, taskRows.length * rowHeight + 20);
-    return Math.max(taskHeight, estimatedLabelHeight);
+    return Math.max(taskHeight, estimatedHeight);
   };
 
   // Handle group click
