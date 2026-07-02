@@ -1,5 +1,7 @@
 # React Modern Gantt
 
+> **Archived.** This fork has been merged into [OpenFarmPlanner](https://github.com/stipsitzm/OpenFarmPlanner) as vendored source at `frontend/src/gantt-chart/` (full commit history preserved there), and is no longer maintained as a separate package here. For the original, still-maintained project, see [MikaStiebitz/React-Modern-Gantt](https://github.com/MikaStiebitz/React-Modern-Gantt).
+
 A flexible, customizable Gantt chart component for React applications with drag-and-drop task scheduling, dark mode support, progress tracking, and multiple view modes.
 
 [![npm version](https://img.shields.io/npm/v/react-modern-gantt.svg)](https://www.npmjs.com/package/react-modern-gantt)
